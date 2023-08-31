@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE } from "./src/constants";
-import { Player } from "./src/actors/Players/player";
+import { Player } from "./src/actors/Players/Player";
 
 const game = new ex.Engine({
     width: VIEWPORT_WIDTH * SCALE,
