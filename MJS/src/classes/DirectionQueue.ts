@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
-import { DOWN, UP, LEFT, RIGHT } from "../constants.ts";
+import { DIRECTION, DOWN, UP, LEFT, RIGHT } from "../constants.ts";
 
 export class DirectionQueue {
-    heldDirections: string[];
+    heldDirections: DIRECTION[];
 
     constructor() {
         this.heldDirections = [];
@@ -12,7 +12,7 @@ export class DirectionQueue {
         return this.heldDirections[0] ?? null;
     }
 
-    add(dir: string) {
+    add(dir: DIRECTION) {
         const exists = this.heldDirections.includes(dir);
         if (exists) {
             return;
@@ -20,7 +20,7 @@ export class DirectionQueue {
         this.heldDirections.unshift(dir);
     }
 
-    remove(dir: string) {
+    remove(dir: DIRECTION) {
         this.heldDirections = this.heldDirections.filter((d) => d !== dir);
     }
 

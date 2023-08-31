@@ -9,10 +9,11 @@ export const SCALE_2x = new ex.Vector(2, 2);
 export const ANCHOR_CENTER = new ex.Vector(0.5, 0.5);
 export const ANCHOR_TOP_LEFT = new ex.Vector(0, 0);
 
-export const LEFT = "LEFT";
-export const RIGHT = "RIGHT";
-export const UP = "UP";
-export const DOWN = "DOWN";
+export type DIRECTION = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN';
+export const LEFT: DIRECTION = "LEFT";
+export const RIGHT: DIRECTION = "RIGHT";
+export const UP: DIRECTION = "UP";
+export const DOWN: DIRECTION = "DOWN";
 
 export const WALK = "WALK";
 export const SWORD1 = "SWORD1";
