@@ -1,3 +1,4 @@
+import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
 import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE } from "./src/constants";
 import { Player } from "./src/actors/Players/Player";
@@ -9,7 +10,9 @@ const game = new ex.Engine({
     antialiasing: false
 });
 
-const player = new Player(200, 200, "BLUE");
+const player = new Player(200, 200);
 game.add(player);
-console.log('starting game')
+
+const floor = new Floor(1, 1, 1, 6);
+game.add(floor);
 game.start();

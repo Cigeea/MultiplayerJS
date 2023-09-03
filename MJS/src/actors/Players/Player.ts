@@ -1,6 +1,7 @@
 import * as ex from 'excalibur';
-import { SCALE_2x, DIRECTION } from '../../constants';
+import { SCALE_2x, DIRECTION, ANCHOR_CENTER } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
+import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
 
 export class Player extends ex.Actor {
     directionQueue: DirectionQueue;
@@ -12,12 +13,16 @@ export class Player extends ex.Actor {
             width: 32,
             height: 32,
             scale: SCALE_2x,
-            collider: ex.Shape.Box(15, 15, new ex.Vector(x, y), new ex.Vector(0, 6)),
+            collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 0)),
             collisionType: ex.CollisionType.Active,
-            color: ex.Color.Green
+            color: ex.Color.Blue
         });
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
+    }
+
+    onInitialize(_engine: ex.Engine): void {
+        new DrawShapeHelper(this);
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {
