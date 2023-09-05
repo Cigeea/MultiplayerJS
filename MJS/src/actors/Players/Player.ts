@@ -2,10 +2,12 @@ import * as ex from 'excalibur';
 import { SCALE_2x, DIRECTION, ANCHOR_CENTER } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
 import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
+import { generateCharacterAnimations } from "../../character-animations.js";
 
 export class Player extends ex.Actor {
     directionQueue: DirectionQueue;
     facing: DIRECTION;
+    skinAnims: { [direction: string]: { [posture: string]: ex.Animation } };
 
     constructor(x: number, y: number) {
         super({
@@ -19,6 +21,7 @@ export class Player extends ex.Actor {
         });
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
+        this.skinAnims = generateCharacterAnimations("RED");
     }
 
     onInitialize(_engine: ex.Engine): void {

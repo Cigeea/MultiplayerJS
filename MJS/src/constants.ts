@@ -15,10 +15,11 @@ export const RIGHT: DIRECTION = "RIGHT";
 export const UP: DIRECTION = "UP";
 export const DOWN: DIRECTION = "DOWN";
 
-export const WALK = "WALK";
-export const SWORD1 = "SWORD1";
-export const SWORD2 = "SWORD2";
-export const PAIN = "PAIN";
+export type POSE = "WALK" | "SWORD1" | "SWORD2" | "PAIN";
+export const WALK: POSE = "WALK";
+export const SWORD1: POSE = "SWORD1";
+export const SWORD2: POSE = "SWORD2";
+export const PAIN: POSE = "PAIN";
 
 export const SWORDACTION = "SWORDACTION";
 export const ARROWACTION = "ARROWACTION";

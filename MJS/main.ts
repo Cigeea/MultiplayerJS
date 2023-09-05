@@ -2,6 +2,7 @@ import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
 import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE } from "./src/constants";
 import { Player } from "./src/actors/Players/Player";
+import { loader } from './src/resources';
 
 const game = new ex.Engine({
     width: VIEWPORT_WIDTH * SCALE,
@@ -15,4 +16,4 @@ game.add(player);
 
 const floor = new Floor(1, 1, 1, 6);
 game.add(floor);
-game.start();
+game.start(loader);
