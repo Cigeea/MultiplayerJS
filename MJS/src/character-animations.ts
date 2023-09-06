@@ -30,7 +30,7 @@ const SPRITESHEET_MAP: { [key: string]: ex.SpriteSheet } = {
   RED: redSpriteSheet,
 };
 
-const ANIMATION_CONFIGS: { [key1 in DIRECTION]: { [key2 in POSE]: (number | number[])[] } } = {
+const ANIMATION_CONFIGS: { [key1 in DIRECTION]: { [key2 in POSE]: [number[], number] } } = {
   DOWN: {
     WALK: [[0, 1], WALK_ANIM_SPEED],
     SWORD1: [[2], WALK_ANIM_SPEED],
@@ -66,8 +66,8 @@ export const generateCharacterAnimations = (spriteSheetKey: keyof typeof SPRITES
       const [frames, speed] = ANIMATION_CONFIGS[dir][pose];
       payload[dir][pose] = ex.Animation.fromSpriteSheet(
         sheet,
-        [...frames as []],
-        speed as number
+        [...frames],
+        speed
       );
     });
   });
