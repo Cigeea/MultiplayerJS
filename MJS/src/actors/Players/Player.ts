@@ -1,5 +1,5 @@
 import * as ex from 'excalibur';
-import { SCALE_2x, DIRECTION, ANCHOR_CENTER } from '../../constants';
+import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
 import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
 import { generateCharacterAnimations } from "../../character-animations.js";
@@ -15,13 +15,14 @@ export class Player extends ex.Actor {
             width: 32,
             height: 32,
             scale: SCALE_2x,
-            collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 0)),
+            collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 6)),
             collisionType: ex.CollisionType.Active,
             color: ex.Color.Blue
         });
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
         this.skinAnims = generateCharacterAnimations("RED");
+        this.graphics.use(this.skinAnims[DOWN][WALK])
     }
 
     onInitialize(_engine: ex.Engine): void {
