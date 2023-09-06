@@ -3,11 +3,13 @@ import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK } from '../../constants'
 import { DirectionQueue } from '../../classes/DirectionQueue';
 import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
 import { generateCharacterAnimations } from "../../character-animations.js";
+import { PlayerAnimations } from './PlayerAnimation.js';
 
 export class Player extends ex.Actor {
     directionQueue: DirectionQueue;
     facing: DIRECTION;
     skinAnims: { [direction: string]: { [posture: string]: ex.Animation } };
+    playerAnimations: PlayerAnimations;
 
     constructor(x: number, y: number) {
         super({
@@ -22,7 +24,8 @@ export class Player extends ex.Actor {
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
         this.skinAnims = generateCharacterAnimations("RED");
-        this.graphics.use(this.skinAnims[DOWN][WALK])
+        this.graphics.use(this.skinAnims[DOWN][WALK]);
+        this.playerAnimations = new PlayerAnimations(this);
     }
 
     onInitialize(_engine: ex.Engine): void {
@@ -34,6 +37,8 @@ export class Player extends ex.Actor {
         this.directionQueue.update(engine);
 
         this.onPreUpdateMovementKeys(engine, delta);
+        //Show right frames
+        this.playerAnimations.showRelevantAnim();
     }
 
     onPreUpdateMovementKeys(engine: ex.Engine, delta: number) {
