@@ -1,3 +1,4 @@
+import { Map_Indoor } from './src/maps/Map_Indoor';
 import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
 import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE } from "./src/constants";
@@ -11,9 +12,12 @@ const game = new ex.Engine({
     antialiasing: false
 });
 
+const map = new Map_Indoor();
+game.add(map);
+
 const player = new Player(200, 200);
 game.add(player);
 
-const floor = new Floor(1, 1, 1, 6);
-game.add(floor);
+
+
 game.start(loader);
