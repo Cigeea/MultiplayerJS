@@ -1,3 +1,4 @@
+import { Player_CameraStrategy } from './src/classes/Player_CameraStrategy';
 import { Map_Indoor } from './src/maps/Map_Indoor';
 import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
@@ -18,6 +19,10 @@ game.add(map);
 const player = new Player(200, 200);
 game.add(player);
 
+game.on("initialize", () => {
+    const cameraStrategy = new Player_CameraStrategy(player, map);
+    game.currentScene.camera.addStrategy(cameraStrategy);
+})
 
 
 game.start(loader);
