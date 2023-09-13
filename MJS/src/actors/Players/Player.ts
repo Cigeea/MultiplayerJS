@@ -32,7 +32,7 @@ export class Player extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        new DrawShapeHelper(this);
+        // new DrawShapeHelper(this);
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {
