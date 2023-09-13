@@ -59,18 +59,24 @@ const ANIMATION_CONFIGS: { [key1 in DIRECTION]: { [key2 in POSE]: [number[], num
 
 export const generateCharacterAnimations = (spriteSheetKey: keyof typeof SPRITESHEET_MAP) => {
   const sheet: ex.SpriteSheet = SPRITESHEET_MAP[spriteSheetKey];
-  let payload: { [direction: string]: { [posture: string]: ex.Animation } } = {};
+  // let payload: { [direction: string]: { [posture: string]: ex.Animation } } = {};
+  // let payload: { [direction in DIRECTION]: { [posture in POSE]: ex.Animation } } = {};
+  // let payload: Partial<Record<DIRECTION, Partial<Record<POSE, ex.Animation>>>> = {};
+  let payload: Partial<{ [direction in DIRECTION]: Partial<{ [posture in POSE]: ex.Animation }> }> = {};
   [UP, DOWN, LEFT, RIGHT].forEach((dir) => {
     payload[dir] = {};
     [WALK, SWORD1, SWORD2, PAIN].forEach((pose) => {
       const [frames, speed] = ANIMATION_CONFIGS[dir][pose];
-      payload[dir][pose] = ex.Animation.fromSpriteSheet(
+      payload[dir]![pose] = ex.Animation.fromSpriteSheet(
         sheet,
         [...frames],
         speed
       );
     });
   });
+
   return payload;
 };
+
+
 

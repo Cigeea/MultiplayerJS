@@ -1,5 +1,5 @@
 import * as ex from 'excalibur';
-import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK } from '../../constants';
+import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
 import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
 import { generateCharacterAnimations } from "../../character-animations.js";
@@ -8,7 +8,10 @@ import { PlayerAnimations } from './PlayerAnimation.js';
 export class Player extends ex.Actor {
     directionQueue: DirectionQueue;
     facing: DIRECTION;
-    skinAnims: { [direction: string]: { [posture: string]: ex.Animation } };
+    // skinAnims: { [direction: string]: { [posture: string]: ex.Animation } };
+    // skinAnims: { [direction in DIRECTION]: { [posture in POSE]: ex.Animation } };
+    // skinAnims: Partial<{ [direction in DIRECTION]: Partial<{ [posture in POSE]: ex.Animation }> }>
+    skinAnims: Partial<Record<DIRECTION, Partial<Record<POSE, ex.Animation>>>> = {};
     playerAnimations: PlayerAnimations;
 
     constructor(x: number, y: number) {
@@ -24,7 +27,7 @@ export class Player extends ex.Actor {
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
         this.skinAnims = generateCharacterAnimations("RED");
-        this.graphics.use(this.skinAnims[DOWN][WALK]);
+        this.graphics.use(this.skinAnims![DOWN]![WALK]!);                   //FUCKING BS ! 
         this.playerAnimations = new PlayerAnimations(this);
     }
 
@@ -47,16 +50,16 @@ export class Player extends ex.Actor {
 
         this.vel.x = 0;
         this.vel.y = 0;
-        if (keyboard.isHeld(ex.Input.Keys.Left)) {
+        if (keyboard.isHeld(ex.Keys.Left)) {
             this.vel.x = -1;
         }
-        if (keyboard.isHeld(ex.Input.Keys.Right)) {
+        if (keyboard.isHeld(ex.Keys.Right)) {
             this.vel.x = 1;
         }
-        if (keyboard.isHeld(ex.Input.Keys.Up)) {
+        if (keyboard.isHeld(ex.Keys.Up)) {
             this.vel.y = -1;
         }
-        if (keyboard.isHeld(ex.Input.Keys.Down)) {
+        if (keyboard.isHeld(ex.Keys.Down)) {
             this.vel.y = 1;
         }
 
