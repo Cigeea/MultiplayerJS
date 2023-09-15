@@ -7,11 +7,25 @@ export class PlayerAnimations {
         this.actor = actor;
     }
 
+    progressThroughActionAnimation(delta: number) {
+        const { actor } = this;
+        if (actor.actionAnimation) {
+            actor.vel.x = 0;            //Freeze
+            actor.vel.y = 0;
+            actor.actionAnimation.work(delta);
+        }
+    }
+
     showRelevantAnim() {
         const { actor } = this;
 
+        if (actor.actionAnimation) {
+            actor.graphics.use(actor.actionAnimation.frame);
+            return;
+        }
+
         //Use correct directional frame
-        actor.graphics.use(actor.skinAnims[actor.facing][WALK]);
+        actor.graphics.use(actor.skinAnims[actor.facing]![WALK]!);
         // const walkingMsLeft = actor.walkingMsLeft ?? 0;
         const walkingMsLeft = 0;
         const anim: ex.Animation = actor.graphics.current[0].graphic as ex.Animation;

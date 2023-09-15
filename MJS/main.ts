@@ -17,6 +17,7 @@ const map = new Map_Indoor();
 game.add(map);
 
 const player = new Player(200, 200);
+player.engine = game;
 game.add(player);
 
 game.on("initialize", () => {
