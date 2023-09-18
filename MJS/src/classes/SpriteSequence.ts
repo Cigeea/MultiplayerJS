@@ -1,9 +1,10 @@
 import * as ex from "excalibur";
+import { Sword } from "../actors/Sword";
 
 interface Frame {
     frame: ex.Animation,
     duration: number,
-    actorObjCallback: (arg0: unknown) => void
+    actorObjCallback: (arg0: Sword | null) => void
 }
 export class SpriteSequence {
 
@@ -13,7 +14,7 @@ export class SpriteSequence {
     currentFrameProgress: number;       //How much time is left on the frame
     isDone: boolean;
     onDone: () => void;
-    actorObject: unknown;
+    actorObject: Sword | null;
 
     constructor(type: string, frameAnim: Frame[] = [], onDone: (actor: unknown) => void) {
         this.type = type;

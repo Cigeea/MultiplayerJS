@@ -1,8 +1,14 @@
 import * as ex from "excalibur";
 
 const Images = {
+    //Characters
     redSheetImage: new ex.ImageSource("/sprites/character-red-sheet.png"),
+
+    //Maps
     indoorImage: new ex.ImageSource("/maps/indoor.png"),
+
+    //Weapons
+    swordSheetImage: new ex.ImageSource("sprites/sword-sheet.png")
 }
 
 const Sounds = {
