@@ -44,7 +44,6 @@ export class Player extends ex.Actor {
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {
-        console.log("UPDATE")
         this.directionQueue.update(engine);
 
         //Work on dedicated animation if we are doing one
@@ -92,6 +91,10 @@ export class Player extends ex.Actor {
         //Register action keys
         if (engine.input.keyboard.wasPressed(ACTION_1_KEY)) {
             this.playerActions.actionSwingSword();
+            return;
+        }
+        if (engine.input.keyboard.wasPressed(ACTION_2_KEY)) {
+            this.playerActions.actionShootArrow();
             return;
         }
         return;

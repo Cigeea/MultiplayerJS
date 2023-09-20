@@ -38,7 +38,6 @@ export class Sword extends ex.Actor {
         this.isUsed = false;  //Has it hit anything
         this.owner = null; // Assigned on creation
         this.addTag(TAG_PLAYER_WEAPON)
-        console.log('Creating Sword');
 
         this.frames = {
             [DOWN]: {

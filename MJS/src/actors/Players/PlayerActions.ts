@@ -1,8 +1,9 @@
 import * as ex from 'excalibur';
 import { SpriteSequence } from '../../classes/SpriteSequence';
-import { SWORD1, SWORD2, SWORDACTION } from '../../constants';
+import { ARROWACTION, SWORD1, SWORD2, SWORDACTION } from '../../constants';
 import { Player } from './Player';
 import { SWORD_SWING_1, SWORD_SWING_2, SWORD_SWING_3, Sword } from '../Sword';
+import { Arrow } from '../Arrow';
 export class PlayerActions {
 
     actor: Player;
@@ -60,5 +61,35 @@ export class PlayerActions {
 
         // Assign this sword instance to be controllable by each frame above
         actor.actionAnimation.actorObject = sword;
+    }
+
+    actionShootArrow() {
+        const SHOOT_ARROW_SPEED = 155;    //spend this much time (in ms) on each frame
+        const { actor, engine } = this;
+
+        //create new sequence for Arrows
+        actor.actionAnimation = new SpriteSequence(
+            ARROWACTION,
+            [
+                {
+                    animation: actor.skinAnims[actor.facing][SWORD1],
+                    duration: SHOOT_ARROW_SPEED,
+                    actorObjCallback: () => { },
+                },
+                {
+                    animation: actor.skinAnims[actor.facing][SWORD2],
+                    duration: SHOOT_ARROW_SPEED,
+                    actorObjCallback: () => {
+                        //Create arrow
+                        const arrow = new Arrow(actor.pos.x, actor.pos.y, actor.facing, actor);
+                        engine.add(arrow);
+                    },
+                }
+            ],
+            () => {
+                actor.actionAnimation = null;
+            }
+        )
+
     }
 }

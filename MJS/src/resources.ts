@@ -8,7 +8,8 @@ const Images = {
     indoorImage: new ex.ImageSource("/maps/indoor.png"),
 
     //Weapons
-    swordSheetImage: new ex.ImageSource("sprites/sword-sheet.png")
+    swordSheetImage: new ex.ImageSource("sprites/sword-sheet.png"),
+    arrowSheetImage: new ex.ImageSource("sprites/arrow-sheet.png")
 }
 
 const Sounds = {
