@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { Images } from "../resources.ts";
-import { DIRECTION, DOWN, LEFT, POSE, RIGHT, SCALE_2x, TAG_PLAYER_WEAPON, UP } from "../constants.ts";
+import { DIRECTION, DOWN, LEFT, POSE, RIGHT, SCALE, SCALE_2x, TAG_PLAYER_WEAPON, UP } from "../constants.ts";
+import { DrawShapeHelper } from "../classes/DrawShapeHelper.ts";
 
 const swordSpriteSheet = ex.SpriteSheet.fromImageSource({
     image: Images.swordSheetImage,
@@ -110,6 +111,24 @@ export class Sword extends ex.Actor {
             },
         };
         this.graphics.use(this.frames![this.direction]![SWORD_SWING_1]);
+
+        //Nudge in initial direction to line up with Player sprite
+        if (direction === DOWN) {
+            this.pos.x -= 5 * SCALE;
+            this.pos.y += 15 * SCALE;
+        }
+        if (direction === UP) {
+            this.pos.x += 5 * SCALE;
+            this.pos.y -= 6 * SCALE;
+        }
+        if (direction === LEFT) {
+            this.pos.x -= 8 * SCALE;
+            this.pos.y += 1 * SCALE;
+        }
+        if (direction === RIGHT) {
+            this.pos.x += 8 * SCALE;
+            this.pos.y += 1 * SCALE;
+        }
     }
 
     onDamagedSomething() {

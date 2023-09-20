@@ -15,7 +15,7 @@ export class PlayerActions {
     }
 
     actionSwingSword() {
-        const SWORD_SWING_SPEED = 350;
+        const SWORD_SWING_SPEED = 50;
         const { actor, engine } = this;
 
         //Create a new Sequence with dedicated callback per frame
@@ -25,7 +25,7 @@ export class PlayerActions {
                 {
                     animation: actor.skinAnims[actor.facing][SWORD1],
                     duration: SWORD_SWING_SPEED,
-                    actorObjCallback: (swordInstance: Sword | null) => {
+                    actorObjCallback: (swordInstance) => {
                         //change sword's frame to match character on frame 1
                         swordInstance?.useFrame(SWORD_SWING_1, actor.facing);
                     }
@@ -47,8 +47,9 @@ export class PlayerActions {
                     }
                 }
             ],
-            (swordInstance) => {
+            (swordInstance: Sword | null) => {
                 actor.actionAnimation = null;
+                swordInstance?.kill();
             }
         )
 

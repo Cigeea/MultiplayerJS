@@ -15,7 +15,7 @@ export class SpriteSequence {
     onDone: () => void;
     actorObject: Sword | null;
 
-    constructor(type: string, frameAnim: Anim[] = [], onDone: (actor: unknown) => void) {
+    constructor(type: string, frameAnim: Anim[] = [], onDone: (actor: Sword | null) => void) {
         this.type = type;
         this.animations = frameAnim;
         this.currentFrameIndex = 0;
