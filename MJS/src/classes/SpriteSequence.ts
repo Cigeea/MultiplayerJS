@@ -1,24 +1,23 @@
 import * as ex from "excalibur";
 import { Sword } from "../actors/Sword";
 
-interface Frame {
-    frame: ex.Animation,
+interface Anim {
+    animation: ex.Animation,
     duration: number,
     actorObjCallback: (arg0: Sword | null) => void
 }
 export class SpriteSequence {
-
     type: string;
-    frameAnims: Frame[];
+    animations: Anim[];
     currentFrameIndex: number;
     currentFrameProgress: number;       //How much time is left on the frame
     isDone: boolean;
     onDone: () => void;
     actorObject: Sword | null;
 
-    constructor(type: string, frameAnim: Frame[] = [], onDone: (actor: unknown) => void) {
+    constructor(type: string, frameAnim: Anim[] = [], onDone: (actor: unknown) => void) {
         this.type = type;
-        this.frameAnims = frameAnim;
+        this.animations = frameAnim;
         this.currentFrameIndex = 0;
         this.currentFrameProgress = 0;
         this.isDone = false;
@@ -30,7 +29,7 @@ export class SpriteSequence {
     }
 
     get frame(): ex.Animation {
-        return this.frameAnims[this.currentFrameIndex].frame;
+        return this.animations[this.currentFrameIndex].animation;
     }
 
     work(delta: number) {
@@ -38,7 +37,7 @@ export class SpriteSequence {
             return true;
         }
 
-        const currentFrameDuration = this.frameAnims[this.currentFrameIndex].duration;
+        const currentFrameDuration = this.animations[this.currentFrameIndex].duration;
 
         //work on current frame
         if (this.currentFrameProgress < currentFrameDuration) {
@@ -46,12 +45,12 @@ export class SpriteSequence {
             return;
         }
 
-        if (this.currentFrameIndex + 1 < this.frameAnims.length) {
+        if (this.currentFrameIndex + 1 < this.animations.length) {
             console.log('Work ' + this.currentFrameIndex);
             this.currentFrameIndex += 1;
             this.currentFrameProgress = 0;
             //Do new frame callback
-            const nextConfig = this.frameAnims[this.currentFrameIndex];
+            const nextConfig = this.animations[this.currentFrameIndex];
             if (nextConfig.actorObjCallback) {
                 nextConfig.actorObjCallback(this.actorObject);
             }

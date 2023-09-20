@@ -57,40 +57,18 @@ const ANIMATION_CONFIGS: { [key1 in DIRECTION]: { [key2 in POSE]: [number[], num
   },
 };
 
-export const generateCharacterAnimations = (spriteSheetKey: keyof typeof SPRITESHEET_MAP) => {
+//Generates the association between the direction, the action and the corresponding Animation based on the spritesheet
+export function generateCharacterAnimations(spriteSheetKey: keyof typeof SPRITESHEET_MAP): Record<DIRECTION, Record<POSE, ex.Animation>> {
   const sheet: ex.SpriteSheet = SPRITESHEET_MAP[spriteSheetKey];
-  // let payload: Partial<{ [direction in DIRECTION]: Partial<{ [posture in POSE]: ex.Animation }> }> = {};
-  let payload: Partial<Record<DIRECTION, Partial<Record<POSE, ex.Animation>>>> = {};
-  const arrDir: DIRECTION[] = [UP, DOWN, LEFT, RIGHT];
-  const arrPos: POSE[] = [PAIN, WALK, SWORD1, SWORD2];
-
-  payload = arrDir.reduce((acc1, currentDir) => {
-    acc1 = {
-      ...acc1, [currentDir]: arrPos.reduce((acc2, currentPos) => {
-        const [frames, speed] = ANIMATION_CONFIGS[currentDir][currentPos];
-        return {
-          ...acc2, [currentPos]: ex.Animation.fromSpriteSheet(
-            sheet,
-            [...frames],
-            speed
-          )
-        };
-      }, {})
-    }
-    return acc1;
-  }, {});
-
-  //  Version originale sans les Reduce
-  // [UP, DOWN, LEFT, RIGHT].forEach((dir) => {
-  //   payload[dir] = {};
-  //   [WALK, SWORD1, SWORD2, PAIN].forEach((pose) => {
-  //     const [frames, speed] = ANIMATION_CONFIGS[dir][pose];
-  //     payload[dir]![pose] = ex.Animation.fromSpriteSheet(
-  //       sheet,
-  //       [...frames],
-  //       speed
-  //     );
-  //   });
-  // });
+  let payload = [UP, DOWN, LEFT, RIGHT].reduce((acc, currentDir) => ({
+    ...acc,
+    [currentDir]: [PAIN, WALK, SWORD1, SWORD2].reduce((acc2, currentPos) => {
+      const [frames, speed] = ANIMATION_CONFIGS[currentDir][currentPos];
+      return {
+        ...acc2,
+        [currentPos]: ex.Animation.fromSpriteSheet(sheet, frames, speed)
+      };
+    }, {} as Record<POSE, ex.Animation>)
+  }), {} as Record<DIRECTION, Record<POSE, ex.Animation>>);
   return payload;
 };

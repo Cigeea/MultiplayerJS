@@ -11,18 +11,15 @@ const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
 
 export class Player extends ex.Actor {
-    engine: ex.Engine | null;
+    engine: ex.Engine;
     directionQueue: DirectionQueue;
     facing: DIRECTION;
-    // skinAnims: { [direction: string]: { [posture: string]: ex.Animation } };
-    // skinAnims: { [direction in DIRECTION]: { [posture in POSE]: ex.Animation } };
-    // skinAnims: Partial<{ [direction in DIRECTION]: Partial<{ [posture in POSE]: ex.Animation }> }>
-    skinAnims: Partial<Record<DIRECTION, Partial<Record<POSE, ex.Animation>>>> = {};
+    skinAnims: Record<DIRECTION, Record<POSE, ex.Animation>>;
     playerAnimations: PlayerAnimations;
     playerActions: PlayerActions;
     actionAnimation: SpriteSequence | null;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, engine: ex.Engine) {
         super({
             pos: new ex.Vector(x, y),
             width: 32,
@@ -32,18 +29,14 @@ export class Player extends ex.Actor {
             collisionType: ex.CollisionType.Active,
             color: ex.Color.Blue
         });
-        this.engine = null;
+        this.engine = engine;
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
         this.skinAnims = generateCharacterAnimations("RED");
-        this.graphics.use(this.skinAnims![DOWN]![WALK]!);                   //FUCKING BS ! 
+        this.graphics.use(this.skinAnims[DOWN][WALK]);
         this.playerAnimations = new PlayerAnimations(this);
         this.playerActions = new PlayerActions(this);
         this.actionAnimation = null;
-        // this.actionAnimation = new SpriteSequence('', [], () => {
-
-        // });
-
     }
 
     onInitialize(_engine: ex.Engine): void {

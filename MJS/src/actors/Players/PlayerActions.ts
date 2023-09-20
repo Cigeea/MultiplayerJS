@@ -6,7 +6,7 @@ import { SWORD_SWING_1, SWORD_SWING_2, SWORD_SWING_3, Sword } from '../Sword';
 export class PlayerActions {
 
     actor: Player;
-    engine: ex.Engine | null;
+    engine: ex.Engine;
 
     constructor(actor: Player) {
         this.actor = actor;
@@ -23,7 +23,7 @@ export class PlayerActions {
             SWORDACTION,
             [
                 {
-                    frame: actor.skinAnims[actor.facing]![SWORD1]!,
+                    animation: actor.skinAnims[actor.facing][SWORD1],
                     duration: SWORD_SWING_SPEED,
                     actorObjCallback: (swordInstance: Sword | null) => {
                         //change sword's frame to match character on frame 1
@@ -31,7 +31,7 @@ export class PlayerActions {
                     }
                 },
                 {
-                    frame: actor.skinAnims[actor.facing]![SWORD2]!,
+                    animation: actor.skinAnims[actor.facing][SWORD2],
                     duration: SWORD_SWING_SPEED,
                     actorObjCallback: (swordInstance) => {
                         //change sword's frame to match character on frame 1
@@ -39,7 +39,7 @@ export class PlayerActions {
                     }
                 },
                 {
-                    frame: actor.skinAnims[actor.facing]![SWORD2]!,
+                    animation: actor.skinAnims[actor.facing][SWORD2],
                     duration: SWORD_SWING_SPEED * 2,
                     actorObjCallback: (swordInstance) => {
                         //change sword's frame to match character on frame 1
@@ -54,7 +54,7 @@ export class PlayerActions {
 
         //Create the sword here...
         const sword = new Sword(actor.pos.x, actor.pos.y, actor.facing);
-        engine?.add(sword);
+        engine.add(sword);
         sword.owner = actor;
 
         // Assign this sword instance to be controllable by each frame above
