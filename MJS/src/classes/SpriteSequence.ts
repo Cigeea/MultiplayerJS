@@ -46,7 +46,6 @@ export class SpriteSequence {
         }
 
         if (this.currentFrameIndex + 1 < this.animations.length) {
-            console.log('Work ' + this.currentFrameIndex);
             this.currentFrameIndex += 1;
             this.currentFrameProgress = 0;
             //Do new frame callback

@@ -26,8 +26,26 @@ const redSpriteSheet = ex.SpriteSheet.fromImageSource({
   grid: charSpritesheetGridConfig,
 });
 
+const graySpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.graySheetImage,
+  grid: charSpritesheetGridConfig,
+});
+
+const blueSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.blueSheetImage,
+  grid: charSpritesheetGridConfig,
+});
+
+const yellowSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.yellowSheetImage,
+  grid: charSpritesheetGridConfig,
+});
+
 const SPRITESHEET_MAP: { [key: string]: ex.SpriteSheet } = {
   RED: redSpriteSheet,
+  BLUE: blueSpriteSheet,
+  GRAY: graySpriteSheet,
+  YELLOW: yellowSpriteSheet,
 };
 
 const ANIMATION_CONFIGS: { [key1 in DIRECTION]: { [key2 in POSE]: [number[], number] } } = {

@@ -16,7 +16,7 @@ const game = new ex.Engine({
 const map = new Map_Indoor();
 game.add(map);
 
-const player = new Player(200, 200, game);
+const player = new Player(200, 200, game, "GRAY");
 game.add(player);
 
 game.on("initialize", () => {

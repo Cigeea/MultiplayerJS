@@ -18,8 +18,9 @@ export class Player extends ex.Actor {
     playerAnimations: PlayerAnimations;
     playerActions: PlayerActions;
     actionAnimation: SpriteSequence | null;
+    skinId: "RED" | "GRAY" | "BLUE" | "YELLOW";
 
-    constructor(x: number, y: number, engine: ex.Engine) {
+    constructor(x: number, y: number, engine: ex.Engine, skinId: "RED" | "GRAY" | "BLUE" | "YELLOW") {
         super({
             pos: new ex.Vector(x, y),
             width: 32,
@@ -32,7 +33,8 @@ export class Player extends ex.Actor {
         this.engine = engine;
         this.directionQueue = new DirectionQueue();
         this.facing = 'DOWN';
-        this.skinAnims = generateCharacterAnimations("RED");
+        this.skinId = skinId;
+        this.skinAnims = generateCharacterAnimations(skinId);
         this.graphics.use(this.skinAnims[DOWN][WALK]);
         this.playerAnimations = new PlayerAnimations(this);
         this.playerActions = new PlayerActions(this);
@@ -97,6 +99,17 @@ export class Player extends ex.Actor {
             this.playerActions.actionShootArrow();
             return;
         }
+        [
+            { key: ex.Keys.Digit1, skinId: "RED" },
+            { key: ex.Keys.Digit2, skinId: "GRAY" },
+            { key: ex.Keys.Digit3, skinId: "BLUE" },
+            { key: ex.Keys.Digit4, skinId: "YELLOW" }
+        ].forEach(({ key, skinId }) => {
+            if (engine.input.keyboard.wasPressed(key)) {
+                this.skinId = skinId;
+                this.skinAnims = generateCharacterAnimations(skinId);
+            }
+        })
         return;
     }
 }

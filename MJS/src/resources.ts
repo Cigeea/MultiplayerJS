@@ -3,6 +3,9 @@ import * as ex from "excalibur";
 const Images = {
     //Characters
     redSheetImage: new ex.ImageSource("/sprites/character-red-sheet.png"),
+    blueSheetImage: new ex.ImageSource("/sprites/character-blue-sheet.png"),
+    graySheetImage: new ex.ImageSource("/sprites/character-gray-sheet.png"),
+    yellowSheetImage: new ex.ImageSource("/sprites/character-yellow-sheet.png"),
 
     //Maps
     indoorImage: new ex.ImageSource("/maps/indoor.png"),
