@@ -1,3 +1,5 @@
+import { EVENT_SEND_PLAYER_UPDATE } from './../../constants';
+import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from 'excalibur';
 import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE, LEFT, UP } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
@@ -28,6 +30,7 @@ export class Player extends ex.Actor {
     isPainFlashing: boolean;
     painState: painStateType | null;
     hasGhostPainState: boolean = false;
+    networkUpdater: NetworkUpdater;
 
     constructor(x: number, y: number, engine: ex.Engine, skinId: "RED" | "GRAY" | "BLUE" | "YELLOW") {
         super({
@@ -50,10 +53,19 @@ export class Player extends ex.Actor {
         this.actionAnimation = null;
         this.isPainFlashing = false;
         this.painState = null;
+        this.networkUpdater = new NetworkUpdater(engine, EVENT_SEND_PLAYER_UPDATE);
     }
 
     onInitialize(_engine: ex.Engine): void {
         // new DrawShapeHelper(this);
+    }
+
+    createNetworkUpdateString() {
+        const actionType = this.actionAnimation?.type ?? "NULL";
+        const isInPain = Boolean(this.painState);
+        const x = Math.round(this.pos.x);
+        const y = Math.round(this.pos.y);
+        return `${actionType}|${x}|${y}|${this.vel.x}|${this.vel.y}|${this.skinId}|${this.facing}|${isInPain}|${this.isPainFlashing}`;
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {
@@ -69,6 +81,10 @@ export class Player extends ex.Actor {
 
         //Show right frames
         this.playerAnimations.showRelevantAnim();
+
+        //Update everybody else
+        const networkUpdateStr = this.createNetworkUpdateString();
+        this.networkUpdater.sendStateUpdate(networkUpdateStr);
     }
 
     onPreUpdateMovement(engine: ex.Engine, delta: number) {
