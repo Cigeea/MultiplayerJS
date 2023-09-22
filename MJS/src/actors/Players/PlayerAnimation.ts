@@ -1,4 +1,4 @@
-import { WALK } from "../../constants";
+import { PAIN, WALK } from "../../constants";
 import { Player } from "./Player";
 
 export class PlayerAnimations {
@@ -19,6 +19,13 @@ export class PlayerAnimations {
     showRelevantAnim() {
         const { actor } = this;
 
+        //Always Prioritize showing Pain if we are in pain
+        if (actor.hasGhostPainState || actor.painState) {
+            actor.graphics.use(actor.skinAnims[actor.facing][PAIN]);
+            return;
+        }
+
+        //If dedicated action is happening use that
         if (actor.actionAnimation) {
             actor.graphics.use(actor.actionAnimation.frame);
             return;

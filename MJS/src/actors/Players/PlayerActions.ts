@@ -5,7 +5,6 @@ import { Player } from './Player';
 import { SWORD_SWING_1, SWORD_SWING_2, SWORD_SWING_3, Sword } from '../Sword';
 import { Arrow } from '../Arrow';
 export class PlayerActions {
-
     actor: Player;
     engine: ex.Engine;
 
@@ -91,5 +90,20 @@ export class PlayerActions {
             }
         )
 
+    }
+
+    //Toogle Opacity on adn off a few times, setting flag isPainFlashing to true while it's happening
+    //We'll use isPainFlashing to make sure no other damage is accepted during this grace period
+    async flashSeries() {
+        const { actor } = this;
+        actor.isPainFlashing = true;
+        const PAIN_FLASH_SPEED = 100;
+        for (let i = 0; i <= 4; i++) {
+            actor.graphics.opacity = 0;
+            await actor.actions.delay(PAIN_FLASH_SPEED).toPromise();
+            actor.graphics.opacity = 1;
+            await actor.actions.delay(PAIN_FLASH_SPEED).toPromise();
+        }
+        actor.isPainFlashing = false;
     }
 }

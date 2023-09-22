@@ -1,5 +1,5 @@
 import * as ex from 'excalibur';
-import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE } from '../../constants';
+import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE, LEFT, UP } from '../../constants';
 import { DirectionQueue } from '../../classes/DirectionQueue';
 import { DrawShapeHelper } from '../../classes/DrawShapeHelper';
 import { generateCharacterAnimations } from "../../character-animations.js";
@@ -10,6 +10,12 @@ import { SpriteSequence } from '../../classes/SpriteSequence.js';
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
 
+interface painStateType {
+    msLeft: number
+    painVelX: number
+    painVelY: number
+}
+
 export class Player extends ex.Actor {
     engine: ex.Engine;
     directionQueue: DirectionQueue;
@@ -19,6 +25,9 @@ export class Player extends ex.Actor {
     playerActions: PlayerActions;
     actionAnimation: SpriteSequence | null;
     skinId: "RED" | "GRAY" | "BLUE" | "YELLOW";
+    isPainFlashing: boolean;
+    painState: painStateType | null;
+    hasGhostPainState: boolean = false;
 
     constructor(x: number, y: number, engine: ex.Engine, skinId: "RED" | "GRAY" | "BLUE" | "YELLOW") {
         super({
@@ -39,6 +48,8 @@ export class Player extends ex.Actor {
         this.playerAnimations = new PlayerAnimations(this);
         this.playerActions = new PlayerActions(this);
         this.actionAnimation = null;
+        this.isPainFlashing = false;
+        this.painState = null;
     }
 
     onInitialize(_engine: ex.Engine): void {
@@ -52,7 +63,7 @@ export class Player extends ex.Actor {
         this.playerAnimations.progressThroughActionAnimation(delta);
 
         if (!this.actionAnimation) {
-            this.onPreUpdateMovementKeys(engine, delta);
+            this.onPreUpdateMovement(engine, delta);
             this.onPreUpdateActionKeys(engine);
         }
 
@@ -60,7 +71,21 @@ export class Player extends ex.Actor {
         this.playerAnimations.showRelevantAnim();
     }
 
-    onPreUpdateMovementKeys(engine: ex.Engine, delta: number) {
+    onPreUpdateMovement(engine: ex.Engine, delta: number) {
+
+        //work down pain state
+        if (this.painState) {
+            this.vel.x = this.painState.painVelX;
+            this.vel.y = this.painState.painVelY;
+
+            //Work on getting rid of the pain
+            this.painState.msLeft -= delta;
+            if (this.painState.msLeft <= 0) {
+                this.painState = null;
+            }
+            return;
+        }
+
         const keyboard = engine.input.keyboard;
         const WALKING_SPEED = 160;
 
@@ -99,6 +124,10 @@ export class Player extends ex.Actor {
             this.playerActions.actionShootArrow();
             return;
         }
+        if (engine.input.keyboard.wasPressed(ex.Keys.W)) {
+            //take dmg
+            this.takeDamage();
+        }
         [
             { key: ex.Keys.Digit1, skinId: "RED" },
             { key: ex.Keys.Digit2, skinId: "GRAY" },
@@ -106,10 +135,28 @@ export class Player extends ex.Actor {
             { key: ex.Keys.Digit4, skinId: "YELLOW" }
         ].forEach(({ key, skinId }) => {
             if (engine.input.keyboard.wasPressed(key)) {
-                this.skinId = skinId;
+                this.skinId = skinId as "RED" | "GRAY" | "BLUE" | "YELLOW";
                 this.skinAnims = generateCharacterAnimations(skinId);
             }
         })
         return;
     }
+    takeDamage() {
+        //No pain if already in pain
+        if (this.isPainFlashing) {
+            return;
+        }
+
+        //Start new pain moment
+        const PAIN_VELOCITY = 150;
+        this.painState = {
+            msLeft: 220,
+            painVelX: this.facing === LEFT ? PAIN_VELOCITY : -PAIN_VELOCITY,
+            painVelY: this.facing === UP ? PAIN_VELOCITY : -PAIN_VELOCITY
+        }
+
+        //Flash for a little bit
+        this.playerActions?.flashSeries();
+    }
+
 }
