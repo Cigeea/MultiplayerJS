@@ -3,9 +3,9 @@ import * as ex from "excalibur";
 export class NetworkUpdater {
     engine: ex.Engine;
     // eventType: ex.EventKey<ex.EngineEvents>;
-    eventType: unknown
+    eventType: string
     prevStr: string;
-    constructor(engine: ex.Engine, eventType: unknown) {
+    constructor(engine: ex.Engine, eventType: string) {
         this.engine = engine;
         this.eventType = eventType;
         this.prevStr = '';
