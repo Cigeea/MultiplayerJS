@@ -12,7 +12,7 @@ import { SpriteSequence } from '../../classes/SpriteSequence.js';
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
 
-interface painStateType {
+export interface painStateType {
     msLeft: number
     painVelX: number
     painVelY: number

@@ -2,6 +2,8 @@ import Peer, { DataConnection } from "peerjs";
 import { guidGenerator } from "../helper";
 import { EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } from "../constants";
 
+//This class manages the raw connections
+
 const PORT = 9002;
 
 const LOCALHOST_CONFIG = {

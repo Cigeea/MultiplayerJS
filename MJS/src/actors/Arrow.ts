@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { Images } from "../resources";
 import { DIRECTION, DOWN, LEFT, RIGHT, SCALE, SCALE_2x, TAG_PLAYER_WEAPON, UP } from "../constants";
 import { Player } from "./Players/Player";
+import { NetworkPlayer } from "./Players/NetworkPlayer";
 
 const arrowSpriteSheet = ex.SpriteSheet.fromImageSource({
     image: Images.arrowSheetImage,
@@ -19,9 +20,9 @@ const arrowLeftAnim = ex.Animation.fromSpriteSheet(arrowSpriteSheet, [2], 100);
 const arrowRightAnim = ex.Animation.fromSpriteSheet(arrowSpriteSheet, [3], 100);
 
 export class Arrow extends ex.Actor {
-    owner: Player;
+    owner: Player | NetworkPlayer;
     msRemaining: number;
-    constructor(x: number, y: number, direction: DIRECTION, creator: Player) {
+    constructor(x: number, y: number, direction: DIRECTION, creator: Player | NetworkPlayer) {
         super({
             pos: new ex.Vector(x, y),
             width: 16,
