@@ -4,12 +4,13 @@ import { DIRECTION, EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } fr
 
 export class NetworkActorsMap {
     engine: ex.Engine;
-    playerMap: Map<string, Player | NetworkPlayer>;
+    playerMap: Map<string, NetworkPlayer>;
     constructor(engine: ex.Engine) {
         this.engine = engine;
         this.playerMap = new Map();
 
         this.engine.on(EVENT_NETWORK_PLAYER_UPDATE, otherPlayer => {
+            console.log('on EVENT_NETWORK_PLAYER_UPDATE dans NetworkActorsMap');
             this.onUpdatedPlayer((otherPlayer as { id: string, data: string }).id, (otherPlayer as { id: string, data: string }).data)
         })
 
@@ -23,6 +24,7 @@ export class NetworkActorsMap {
     }
 
     onUpdatedPlayer(id: string, content: string) {
+        console.log('ON UPDATE PLAYER in NetworkActorsMap');
         //Decode what was sent here
         const [
             actionType,
@@ -53,11 +55,14 @@ export class NetworkActorsMap {
 
         let otherPlayerActor = this.playerMap.get(id);
         if (!otherPlayerActor) {
+            console.log('Creating new NetworkPlayer in NetworkActorsMap');
             otherPlayerActor = new NetworkPlayer(stateUpdate.x, stateUpdate.y, this.engine);
             this.playerMap.set(id, otherPlayerActor);
             this.engine.add(otherPlayerActor);
         }
-        console.log('UPDATING PLAYER');
+
+        otherPlayerActor.onStateUpdate(stateUpdate);
+
     }
 
 

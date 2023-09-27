@@ -34,8 +34,8 @@ export class PlayerAnimations {
 
         //Use correct directional frame
         actor.graphics.use(actor.skinAnims[actor.facing][WALK]);
-        // const walkingMsLeft = actor.walkingMsLeft ?? 0;
-        const walkingMsLeft = 0;
+        const walkingMsLeft = actor.walkingMsLeft ?? 0;
+        // const walkingMsLeft = 0;
         const anim: ex.Animation = actor.graphics.current[0].graphic as ex.Animation;
         if (actor.vel.x !== 0 || actor.vel.y !== 0 || walkingMsLeft > 0) {
             anim.play();

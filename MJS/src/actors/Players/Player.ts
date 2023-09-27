@@ -26,6 +26,7 @@ export class Player extends ex.Actor {
     playerAnimations: PlayerAnimations;
     playerActions: PlayerActions;
     actionAnimation: SpriteSequence | null;
+    walkingMsLeft: number = 0;
     skinId: "RED" | "GRAY" | "BLUE" | "YELLOW";
     isPainFlashing: boolean;
     painState: painStateType | null;
