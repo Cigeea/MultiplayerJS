@@ -1,9 +1,10 @@
+import { Monster } from './src/actors/Monsters/Monster';
 import { NetworkClient } from './src/classes/NetworkClient';
 import { Player_CameraStrategy } from './src/classes/Player_CameraStrategy';
 import { Map_Indoor } from './src/maps/Map_Indoor';
 import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
-import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE, EVENT_SEND_PLAYER_UPDATE } from "./src/constants";
+import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE, EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER } from "./src/constants";
 import { Player } from "./src/actors/Players/Player";
 import { loader } from './src/resources';
 import { NetworkActorsMap } from './src/classes/NetworkActorsMap';
@@ -26,6 +27,9 @@ game.on("initialize", () => {
     const cameraStrategy = new Player_CameraStrategy(player, map);
     game.currentScene.camera.addStrategy(cameraStrategy);
 
+    // Set up ability to query for certain actors on the fly
+    game.currentScene.world.queryManager.createQuery([TAG_ANY_PLAYER]);
+
     //Create player state list and network listener
     new NetworkActorsMap(game);
     const peer = new NetworkClient(game);
@@ -38,3 +42,17 @@ game.on("initialize", () => {
 
 
 game.start(loader);
+
+
+const createAddMonsterButton = () => {
+    const button = document.createElement("button");
+    button.onclick = () => {
+        const monster = new Monster(100, 100);
+        game.add(monster);
+    }
+    button.style.display = "block";
+    button.innerText = "ADD MONSTER";
+    document.body.append(button);
+}
+
+createAddMonsterButton();

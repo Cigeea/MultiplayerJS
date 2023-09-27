@@ -1,4 +1,4 @@
-import { EVENT_SEND_PLAYER_UPDATE } from './../../constants';
+import { EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER } from './../../constants';
 import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from 'excalibur';
 import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE, LEFT, UP } from '../../constants';
@@ -55,6 +55,7 @@ export class Player extends ex.Actor {
         this.isPainFlashing = false;
         this.painState = null;
         this.networkUpdater = new NetworkUpdater(engine, EVENT_SEND_PLAYER_UPDATE);
+        this.addTag(TAG_ANY_PLAYER);
     }
 
     onInitialize(_engine: ex.Engine): void {

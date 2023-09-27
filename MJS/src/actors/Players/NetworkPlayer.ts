@@ -1,6 +1,6 @@
 import { PlayerActions } from './PlayerActions';
 import * as ex from "excalibur";
-import { ARROWACTION, DIRECTION, DOWN, POSE, SCALE_2x, SWORDACTION } from "../../constants";
+import { ARROWACTION, DIRECTION, DOWN, POSE, SCALE_2x, SWORDACTION, TAG_ANY_PLAYER } from "../../constants";
 import { generateCharacterAnimations } from "../../character-animations";
 import { SpriteSequence } from "../../classes/SpriteSequence";
 import { PlayerAnimations } from './PlayerAnimation';
@@ -39,6 +39,7 @@ export class NetworkPlayer extends ex.Actor {
         this.playerAnimations = new PlayerAnimations(this);
         this.playerActions = new PlayerActions(this);
         this.painState = null;
+        this.addTag(TAG_ANY_PLAYER);
     }
 
     regenAnims(newSkinId: string) {

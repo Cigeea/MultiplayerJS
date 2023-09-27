@@ -90,3 +90,64 @@ export function generateCharacterAnimations(spriteSheetKey: keyof typeof SPRITES
   }), {} as Record<DIRECTION, Record<POSE, ex.Animation>>);
   return payload;
 };
+
+const monsterSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.monsterSheetImage,
+  grid: {
+    columns: 4,
+    rows: 4,
+    spriteWidth: 16,
+    spriteHeight: 16
+  }
+})
+
+const MONSTER_ANIM_SPEED = 300;
+
+export const generateMonsterAnimations = () => {
+  return {
+    [WALK]: {
+      [DOWN]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [0, 1],
+        MONSTER_ANIM_SPEED
+      ),
+      [UP]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [4, 5],
+        MONSTER_ANIM_SPEED
+      ),
+      [LEFT]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [8, 9],
+        MONSTER_ANIM_SPEED
+      ),
+      [RIGHT]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [12, 13],
+        MONSTER_ANIM_SPEED
+      )
+    },
+    [PAIN]: {
+      [DOWN]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [2, 3],
+        MONSTER_ANIM_SPEED
+      ),
+      [UP]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [6, 7],
+        MONSTER_ANIM_SPEED
+      ),
+      [LEFT]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [10, 11],
+        MONSTER_ANIM_SPEED
+      ),
+      [RIGHT]: ex.Animation.fromSpriteSheet(
+        monsterSpriteSheet,
+        [14, 15],
+        MONSTER_ANIM_SPEED
+      ),
+    }
+  }
+}

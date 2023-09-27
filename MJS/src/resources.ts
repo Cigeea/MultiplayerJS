@@ -6,6 +6,7 @@ const Images = {
     blueSheetImage: new ex.ImageSource("/sprites/character-blue-sheet.png"),
     graySheetImage: new ex.ImageSource("/sprites/character-gray-sheet.png"),
     yellowSheetImage: new ex.ImageSource("/sprites/character-yellow-sheet.png"),
+    monsterSheetImage: new ex.ImageSource("/sprites/monster-sheet.png"),
 
     //Maps
     indoorImage: new ex.ImageSource("/maps/indoor.png"),
