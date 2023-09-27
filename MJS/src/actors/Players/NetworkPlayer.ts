@@ -66,6 +66,10 @@ export class NetworkPlayer extends ex.Actor {
             this.walkingMsLeft = 100;       //Assume walking for this time if new pos came in
         }
 
+        // Use the latest facing and pain values from the network
+        this.facing = newUpdate.facing ?? this.facing;
+        this.hasGhostPainState = newUpdate.isInPain;
+
         //If we are newly in pain flashing kick off a flash series
         const wasPainFlashing = this.isPainFlashing;
         if (!wasPainFlashing && newUpdate.isPainFlashing) {

@@ -81,7 +81,7 @@ export interface stateUpdateType {
     x: number,
     y: number,
     skinId: string,
-    facing: string,
+    facing: DIRECTION,
     isInPain: boolean,
     isPainFlashing: boolean,
     velX?: number
