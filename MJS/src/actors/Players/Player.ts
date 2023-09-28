@@ -1,4 +1,4 @@
-import { EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER } from './../../constants';
+import { EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON } from './../../constants';
 import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from 'excalibur';
 import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE, LEFT, UP } from '../../constants';
@@ -8,6 +8,7 @@ import { generateCharacterAnimations } from "../../character-animations.js";
 import { PlayerAnimations } from './PlayerAnimation.js';
 import { PlayerActions } from './PlayerActions.js';
 import { SpriteSequence } from '../../classes/SpriteSequence.js';
+import { Sword } from '../Sword.js';
 
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
@@ -56,6 +57,22 @@ export class Player extends ex.Actor {
         this.painState = null;
         this.networkUpdater = new NetworkUpdater(engine, EVENT_SEND_PLAYER_UPDATE);
         this.addTag(TAG_ANY_PLAYER);
+        this.on("collisionstart", (evt) => this.onCollisionStart(evt));
+    }
+    onCollisionStart(evt: ex.CollisionStartEvent<ex.Actor>): void {
+        // Take damage from other Player's weapons
+        if (evt.other.hasTag(TAG_PLAYER_WEAPON)) {
+            const sword = evt.other as Sword;
+            if (sword.owner !== this) {
+                this.takeDamage();
+                sword.onDamagedSomething();
+            }
+        }
+
+        // Take damage from external things (Enemies, etc)
+        if (evt.other.hasTag(TAG_DAMAGES_PLAYER)) {
+            this.takeDamage();
+        }
     }
 
     onInitialize(_engine: ex.Engine): void {

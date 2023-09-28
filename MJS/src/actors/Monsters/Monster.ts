@@ -1,10 +1,12 @@
 import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from "excalibur";
-import { ANCHOR_CENTER, DOWN, EVENT_NETWORK_MONSTER_UPDATE, LEFT, PAIN, RIGHT, SCALE, SCALE_2x, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, UP, WALK } from "../../constants";
+import { ANCHOR_CENTER, DIRECTION, DOWN, EVENT_NETWORK_MONSTER_UPDATE, LEFT, PAIN, RIGHT, SCALE, SCALE_2x, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON, UP, WALK } from "../../constants";
 import { guidGenerator, randomFromArray } from "../../helper";
 import { generateMonsterAnimations } from "../../character-animations";
 import { NetworkPlayer } from "../Players/NetworkPlayer";
-import { Player } from "../Players/Player";
+import { Player, painStateType } from "../Players/Player";
+import { Sword } from '../Sword';
+import { Explosion } from '../Explosion';
 
 const MONSTER_WALK_VELOCITY = 30;
 const MONSTER_CHASE_VELOCITY = 65;
@@ -12,7 +14,7 @@ const MONSTER_DETECT_PLAYER_RANGE = 150;      //in pixels
 
 export class Monster extends ex.Actor {
     networkId: string;
-    painState: null;
+    painState: null | painStateType;
     roamingPoint: null | ex.Vector;
     target: null | Player | NetworkPlayer;
     hp: number;
@@ -35,6 +37,56 @@ export class Monster extends ex.Actor {
         this.hp = 3;
         this.facing = DOWN;
         this.anims = generateMonsterAnimations();
+        this.on("collisionstart", (evt) => this.onCollisionStart(evt));
+    }
+
+    onCollisionStart(evt: ex.CollisionStartEvent<ex.Actor>): void {
+        if (evt.other.hasTag(TAG_PLAYER_WEAPON)) {
+            const weapon = evt.other as Sword;
+            if (weapon.isUsed) {
+                return;
+            }
+            weapon.onDamagedSomething();
+            this.takeDamage(weapon.direction);
+        }
+    }
+
+    takeDamage(otherDirection: DIRECTION) {
+        if (this.painState) {
+            return;
+        }
+
+        // Reduce HP
+        this.hp -= 1;
+
+        // Check for death
+        if (this.hp === 0) {
+            this.kill();
+            const expl = new Explosion(this.pos.x, this.pos.y);
+            this.scene.engine.add(expl);
+            return;
+        }
+
+        let x = this.vel.x * -1;
+        if (otherDirection === LEFT) {
+            x = -300;
+        }
+        if (otherDirection === RIGHT) {
+            x = 300;
+        }
+        let y = this.vel.y * -1;
+        if (otherDirection === DOWN) {
+            y = 300;
+        }
+        if (otherDirection === UP) {
+            y = -300;
+        }
+
+        this.painState = {
+            msLeft: 100,
+            painVelX: x,
+            painVelY: y,
+        };
     }
 
     onInitialize(_engine: ex.Engine): void {
@@ -51,15 +103,15 @@ export class Monster extends ex.Actor {
         this.networkUpdater = new NetworkUpdater(_engine, EVENT_NETWORK_MONSTER_UPDATE);
     }
 
-    onPreUpdate() {
+    onPreUpdate(engine: ex.Engine, delta: number) {
         // Handle the pain state first
         if (this.painState) {
-            // this.vel.x = this.painState.velX;
-            // this.vel.y = this.painState.velY;
-            // this.painState.msLeft -= delta;
-            // if (this.painState.msLeft <= 0) {
-            //     this.painState = null;
-            // }
+            this.vel.x = this.painState.painVelX;
+            this.vel.y = this.painState.painVelY;
+            this.painState.msLeft -= delta;
+            if (this.painState.msLeft <= 0) {
+                this.painState = null;
+            }
         } else {
             // Pursue target or roaming point
             if (this.target) {

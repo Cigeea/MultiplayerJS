@@ -13,7 +13,11 @@ const Images = {
 
     //Weapons
     swordSheetImage: new ex.ImageSource("sprites/sword-sheet.png"),
-    arrowSheetImage: new ex.ImageSource("sprites/arrow-sheet.png")
+    arrowSheetImage: new ex.ImageSource("sprites/arrow-sheet.png"),
+
+    // Effects
+    explosionSheetImage: new ex.ImageSource("/sprites/explosion-sheet.png"),
+
 }
 
 const Sounds = {
