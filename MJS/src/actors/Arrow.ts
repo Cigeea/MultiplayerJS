@@ -54,10 +54,11 @@ export class Arrow extends ex.Actor {
             this.pos.y += SCALE * 4;
         }
     }
-
-    onDamageSomething() {
+    // Remove me if I hit something
+    onDamagedSomething() {
         this.kill();
     }
+
 
     onPreUpdate(_engine: ex.Engine, _delta: number): void {
         this.msRemaining -= _delta;
