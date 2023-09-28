@@ -64,6 +64,10 @@ export class Monster extends ex.Actor {
             this.kill();
             const expl = new Explosion(this.pos.x, this.pos.y);
             this.scene.engine.add(expl);
+
+            // Emit that we died. It matters otherwise other players don't hear about HP being 0
+            const networkUpdateStr = this.createNetworkUpdateString();
+            this.networkUpdater?.sendStateUpdate(networkUpdateStr);
             return;
         }
 
@@ -87,6 +91,15 @@ export class Monster extends ex.Actor {
             painVelX: x,
             painVelY: y,
         };
+    }
+    createNetworkUpdateString() {
+        const hasPainState = Boolean(this.painState);
+        const x = Math.round(this.pos.x);
+        const y = Math.round(this.pos.y);
+
+        // NOTE: this is one large line...
+        return `MONSTER|${this.networkId}|${x}|${y}|${this.vel.x}|${this.vel.y}`
+            + `|${this.facing}|${hasPainState}|${this.hp}`;
     }
 
     onInitialize(_engine: ex.Engine): void {
@@ -123,6 +136,10 @@ export class Monster extends ex.Actor {
 
         // Show correct appearance
         this.onPreUpdateAnimation();
+
+        //Update everybody
+        const networkUpdateStr = this.createNetworkUpdateString();
+        this.networkUpdater?.sendStateUpdate(networkUpdateStr);
     }
 
     onPreUpdateMoveTowardsRoamingPoint() {

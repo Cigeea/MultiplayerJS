@@ -1,6 +1,6 @@
 import Peer, { DataConnection } from "peerjs";
 import { guidGenerator } from "../helper";
-import { EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } from "../constants";
+import { EVENT_NETWORK_MONSTER_UPDATE, EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } from "../constants";
 
 //This class manages the raw connections
 
@@ -47,7 +47,7 @@ export class NetworkClient {
             })
 
             conn.on("data", (data) => {
-                this.handleIncomingData(conn, data);
+                this.handleIncomingData(conn, data as string);
             })
 
             //Close the connection if I leave
@@ -81,7 +81,7 @@ export class NetworkClient {
 
             //Subscribe to their updates
             conn.on("data", (data) => {
-                this.handleIncomingData(conn, data);
+                this.handleIncomingData(conn, data as string);
             });
 
             //Close the connection if I leave
@@ -93,10 +93,16 @@ export class NetworkClient {
         }
     }
 
-    handleIncomingData(conn: DataConnection, data: unknown) {
+    handleIncomingData(conn: DataConnection, data: string) {
         //HANDLE THE DATA HERE
         // throw new Error("Method not implemented.");
         console.log("GOT DATA! ", data)
+
+        // Handle MONSTER updates (detect by prefix)
+        if (data.startsWith("MONSTER")) {
+            this.engine.emit(EVENT_NETWORK_MONSTER_UPDATE, data);
+            return;
+        }
 
         //Handle player prefix
         this.engine.emit(EVENT_NETWORK_PLAYER_UPDATE, {

@@ -1,10 +1,11 @@
+import { NetworkMonster } from "../actors/Monsters/NetworkMonster";
 import { NetworkPlayer } from "../actors/Players/NetworkPlayer";
 import { Player } from "../actors/Players/Player";
-import { DIRECTION, EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } from "../constants";
+import { DIRECTION, EVENT_NETWORK_MONSTER_UPDATE, EVENT_NETWORK_PLAYER_LEAVE, EVENT_NETWORK_PLAYER_UPDATE } from "../constants";
 
 export class NetworkActorsMap {
     engine: ex.Engine;
-    playerMap: Map<string, NetworkPlayer>;
+    playerMap: Map<string, NetworkPlayer | NetworkMonster>;
     constructor(engine: ex.Engine) {
         this.engine = engine;
         this.playerMap = new Map();
@@ -17,10 +18,38 @@ export class NetworkActorsMap {
         this.engine.on(EVENT_NETWORK_PLAYER_LEAVE, otherPlayerIdWhoLeft => {
             this.removePlayer(otherPlayerIdWhoLeft as string);
         });
+
+        this.engine.on(EVENT_NETWORK_MONSTER_UPDATE, (content) => {
+            this.onUpdatedMonster(content as string);
+        });
     }
 
-    toto = (otherPlayer: { id: string, data: string }) => {
-        this.onUpdatedPlayer(otherPlayer.id, otherPlayer.data)
+    onUpdatedMonster(content: string) {
+        console.log('ON UPDATE MONSTER');
+        const [_type, networkId, x, y, _velX, _velY, facing, hasPainState, hp] =
+            content.split("|");
+
+        let networkActor = this.playerMap.get(networkId) as NetworkMonster;
+
+        // Add new if it doesn't exist
+        if (!networkActor) {
+            console.log('Add new monster if it doesnt exist ');
+            networkActor = new NetworkMonster(Number(x), Number(y));
+            this.playerMap.set(networkId, networkActor);
+            this.engine.add(networkActor);
+        }
+
+        //Update the node ("Puppet style")
+        networkActor.pos.x = Number(x);
+        networkActor.pos.y = Number(y);
+        networkActor.facing = facing;
+        networkActor.hasPainState = hasPainState === "true";
+
+        // Destroy if gone
+        if (Number(hp) <= 0) {
+            networkActor.tookFinalDamage();
+            this.playerMap.delete(networkId);
+        }
     }
 
     onUpdatedPlayer(id: string, content: string) {
@@ -53,7 +82,7 @@ export class NetworkActorsMap {
             stateUpdate.velY = Number(velY);
         }
 
-        let otherPlayerActor = this.playerMap.get(id);
+        let otherPlayerActor = this.playerMap.get(id) as NetworkPlayer;
         if (!otherPlayerActor) {
             console.log('Creating new NetworkPlayer in NetworkActorsMap');
             otherPlayerActor = new NetworkPlayer(stateUpdate.x, stateUpdate.y, this.engine);

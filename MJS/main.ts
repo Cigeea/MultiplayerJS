@@ -4,7 +4,7 @@ import { Player_CameraStrategy } from './src/classes/Player_CameraStrategy';
 import { Map_Indoor } from './src/maps/Map_Indoor';
 import { Floor } from './src/actors/Floor';
 import * as ex from "excalibur";
-import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE, EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER } from "./src/constants";
+import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE, EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER, EVENT_SEND_MONSTER_UPDATE } from "./src/constants";
 import { Player } from "./src/actors/Players/Player";
 import { loader } from './src/resources';
 import { NetworkActorsMap } from './src/classes/NetworkActorsMap';
@@ -38,6 +38,10 @@ game.on("initialize", () => {
     game.on(EVENT_SEND_PLAYER_UPDATE, (update) => {
         peer.sendUpdate(update);
     })
+
+    game.on(EVENT_SEND_MONSTER_UPDATE, (update) => {
+        peer.sendUpdate(update);
+    });
 })
 
 
