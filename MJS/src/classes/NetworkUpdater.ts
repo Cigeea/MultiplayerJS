@@ -15,7 +15,6 @@ export class NetworkUpdater {
         if (this.prevStr === newString) {
             return;
         }
-        // console.log(newString);
         this.engine.emit(this.eventType, newString);
         this.prevStr = newString;
     }

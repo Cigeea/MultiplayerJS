@@ -49,7 +49,6 @@ export class NetworkPlayer extends ex.Actor {
 
     //Convert a network update to friendly values for this actor
     onStateUpdate(newUpdate: stateUpdateType) {
-        console.log('State Update in Network Player')
         if (newUpdate.actionType === SWORDACTION && !this.actionAnimation) {
             this.playerActions?.actionSwingSword();
         }

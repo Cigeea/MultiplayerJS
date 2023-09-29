@@ -11,7 +11,6 @@ export class NetworkActorsMap {
         this.playerMap = new Map();
 
         this.engine.on(EVENT_NETWORK_PLAYER_UPDATE, otherPlayer => {
-            console.log('on EVENT_NETWORK_PLAYER_UPDATE dans NetworkActorsMap');
             this.onUpdatedPlayer((otherPlayer as { id: string, data: string }).id, (otherPlayer as { id: string, data: string }).data)
         })
 
@@ -25,7 +24,6 @@ export class NetworkActorsMap {
     }
 
     onUpdatedMonster(content: string) {
-        console.log('ON UPDATE MONSTER');
         const [_type, networkId, x, y, _velX, _velY, facing, hasPainState, hp] =
             content.split("|");
 
@@ -53,7 +51,6 @@ export class NetworkActorsMap {
     }
 
     onUpdatedPlayer(id: string, content: string) {
-        console.log('ON UPDATE PLAYER in NetworkActorsMap');
         //Decode what was sent here
         const [
             actionType,
@@ -84,7 +81,6 @@ export class NetworkActorsMap {
 
         let otherPlayerActor = this.playerMap.get(id) as NetworkPlayer;
         if (!otherPlayerActor) {
-            console.log('Creating new NetworkPlayer in NetworkActorsMap');
             otherPlayerActor = new NetworkPlayer(stateUpdate.x, stateUpdate.y, this.engine);
             this.playerMap.set(id, otherPlayerActor);
             this.engine.add(otherPlayerActor);
@@ -93,8 +89,6 @@ export class NetworkActorsMap {
         otherPlayerActor.onStateUpdate(stateUpdate);
 
     }
-
-
 
     removePlayer(id: string) {
         const actorToRemove = this.playerMap.get(id);

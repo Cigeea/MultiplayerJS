@@ -1,6 +1,6 @@
 import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from "excalibur";
-import { ANCHOR_CENTER, DIRECTION, DOWN, EVENT_NETWORK_MONSTER_UPDATE, LEFT, PAIN, RIGHT, SCALE, SCALE_2x, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON, UP, WALK } from "../../constants";
+import { ANCHOR_CENTER, DIRECTION, DOWN, EVENT_NETWORK_MONSTER_UPDATE, EVENT_SEND_MONSTER_UPDATE, LEFT, PAIN, RIGHT, SCALE, SCALE_2x, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON, UP, WALK } from "../../constants";
 import { guidGenerator, randomFromArray } from "../../helper";
 import { generateMonsterAnimations } from "../../character-animations";
 import { NetworkPlayer } from "../Players/NetworkPlayer";
@@ -113,7 +113,7 @@ export class Monster extends ex.Actor {
         void this.queryForTarget();
 
         //Send network updates on move
-        this.networkUpdater = new NetworkUpdater(_engine, EVENT_NETWORK_MONSTER_UPDATE);
+        this.networkUpdater = new NetworkUpdater(_engine, EVENT_SEND_MONSTER_UPDATE);
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {

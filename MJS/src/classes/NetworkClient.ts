@@ -96,7 +96,6 @@ export class NetworkClient {
     handleIncomingData(conn: DataConnection, data: string) {
         //HANDLE THE DATA HERE
         // throw new Error("Method not implemented.");
-        console.log("GOT DATA! ", data)
 
         // Handle MONSTER updates (detect by prefix)
         if (data.startsWith("MONSTER")) {
@@ -120,7 +119,7 @@ export class NetworkClient {
     }
 
     sendUpdate(update: unknown) {
-        this.connectionMap.forEach((conn, key) => {
+        this.connectionMap.forEach((conn) => {
             conn.send(update);
         })
     }
