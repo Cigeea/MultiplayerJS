@@ -15,6 +15,19 @@ const LOCALHOST_CONFIG = {
 
 const LOCALHOST_URL = `http://localhost:${PORT}`;
 
+const PROD_URL = `peerjs-82ns.onrender.com`
+
+const PROD_CONFIG = {
+    host: PROD_URL,
+    key: "demodemo",
+    port: "",
+    path: "/myapp",
+    secure: true
+}
+
+
+
+
 export class NetworkClient {
     engine: ex.Engine;
     peerId: string;
@@ -28,7 +41,7 @@ export class NetworkClient {
     }
 
     async init() {
-        this.peer = new Peer(this.peerId, LOCALHOST_CONFIG);
+        this.peer = new Peer(this.peerId, PROD_CONFIG);
 
         this.peer.on("error", (err) => {
             console.log(err.message);
@@ -112,7 +125,9 @@ export class NetworkClient {
     }
 
     async getAllPeerIds() {
-        const response = await fetch(`${LOCALHOST_URL}/myapp/demodemo/peers`);          //only if allow_discovery = true
+        // const response = await fetch(`${LOCALHOST_URL}/myapp/demodemo/peers`);          //only if allow_discovery = true
+        //const response = await fetch(`${LOCALHOST_URL}/myapp/demodemo/peers`);
+        const response = await fetch(`https://${PROD_URL}/myapp/demodemo/peers`);
         const peersArray: string[] = await response.json();
         const list = peersArray ?? [];
         return list.filter((id) => id !== this.peerId);
