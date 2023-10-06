@@ -8,12 +8,14 @@ import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT, SCALE, EVENT_SEND_PLAYER_UPDATE, TAG_A
 import { Player } from "./src/actors/Players/Player";
 import { loader } from './src/resources';
 import { NetworkActorsMap } from './src/classes/NetworkActorsMap';
+import { DisplayMode } from 'excalibur';
 
 const game = new ex.Engine({
     width: VIEWPORT_WIDTH * SCALE,
     height: VIEWPORT_HEIGHT * SCALE,
     fixedUpdateFps: 60,
-    antialiasing: false
+    antialiasing: false,
+    displayMode: DisplayMode.FillScreen
 });
 
 const map = new Map_Indoor();
