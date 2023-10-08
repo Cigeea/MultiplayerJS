@@ -140,6 +140,6 @@ export class Sword extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        // new DrawShapeHelper(this);
+        new DrawShapeHelper(this);
     }
 }

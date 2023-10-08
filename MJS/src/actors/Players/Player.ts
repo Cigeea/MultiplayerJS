@@ -61,7 +61,7 @@ export class Player extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        new DrawShapeHelper(this);
+        // new DrawShapeHelper(this);
         this.playerActions = new PlayerActions(this);
     }
 
