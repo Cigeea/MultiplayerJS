@@ -13,7 +13,7 @@ export class Floor extends ex.Actor {
             anchor: ANCHOR_TOP_LEFT,
             collider: ex.Shape.Box(SIZE * cols, SIZE * rows, ex.Vector.Zero),
             collisionType: ex.CollisionType.Fixed,
-            // color: ex.Color.Red,
+            color: ex.Color.Red,
         });
 
         this.graphics.opacity = 0.7;

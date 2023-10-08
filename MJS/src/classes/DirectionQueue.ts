@@ -26,10 +26,10 @@ export class DirectionQueue {
 
     update(engine: ex.Engine) {
         [
-            { key: ex.Keys.Left, dir: LEFT },
-            { key: ex.Keys.Right, dir: RIGHT },
-            { key: ex.Keys.Up, dir: UP },
-            { key: ex.Keys.Down, dir: DOWN },
+            { key: ex.Keys.A, dir: LEFT },
+            { key: ex.Keys.D, dir: RIGHT },
+            { key: ex.Keys.W, dir: UP },
+            { key: ex.Keys.S, dir: DOWN },
         ].forEach((group) => {
             if (engine.input.keyboard.wasPressed(group.key)) {
                 this.add(group.dir);

@@ -52,8 +52,6 @@ export class Player extends ex.Actor {
         this.skinAnims = generateCharacterAnimations(skinId);
         this.graphics.use(this.skinAnims[DOWN][WALK]);
         this.playerAnimations = new PlayerAnimations(this);
-        // this.playerActions = new PlayerActions(this);
-        console.log('constructor');
         this.actionAnimation = null;
         this.isPainFlashing = false;
         this.painState = null;
@@ -63,59 +61,8 @@ export class Player extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        console.log('onInitialize');
         new DrawShapeHelper(this);
         this.playerActions = new PlayerActions(this);
-    }
-
-    displayStuff(player: Player): void {
-        window.player = player;
-        console.log('\n\n');
-        console.log('                                           Player data:   -> player');
-        console.log('center', player.center);
-        console.log('body.pos', player.body.pos);
-        console.log('pos', player.pos);
-        console.log('getGlobalPos()', player.getGlobalPos());
-
-        const componentCollider = player.collider;
-        window.componentCollider = componentCollider;
-        console.log('\n\n');
-        console.log('                                           Component Collider data:   -> componentCollider');
-        console.log('bounds', componentCollider.bounds);
-        console.log('localBounds', componentCollider.localBounds);
-
-        const collider = componentCollider.get();
-        window.collider = collider;
-        console.log('\n\n');
-        console.log('                                           Collider data:   -> collider');
-        console.log('worldPos', collider.worldPos);
-        console.log('center', collider.center);
-        console.log('bounds', collider.bounds);
-        console.log('localBounds', collider.localBounds);
-        this.displayColliderInWorldUnits(player, componentCollider)
-    }
-
-    displayColliderInWorldUnits(player: Player, collider: ex.ColliderComponent) {
-        const bounds = collider.bounds;
-        const { x: left, y: top } =
-            player.scene.engine.screenToWorldCoordinates(
-                ex.vec(bounds.left, bounds.top)
-            );
-        const { x: right, y: bottom } =
-            player.scene.engine.screenToWorldCoordinates(
-                ex.vec(bounds.right, bounds.bottom)
-            );
-        const newBounds = new ex.BoundingBox({
-            left,
-            top,
-            right,
-            bottom
-        });
-        window.bbox = newBounds;
-        console.log('\n\n');
-        console.log('                                           BoundingBox data:   -> BoundingBox');
-        console.log('bbox', newBounds);
-
     }
 
     onCollisionStart(evt: ex.CollisionStartEvent<ex.Actor>): void {
@@ -207,17 +154,15 @@ export class Player extends ex.Actor {
     onPreUpdateActionKeys(engine: ex.Engine) {
         //Register action keys
         if (engine.input.keyboard.wasPressed(ACTION_1_KEY)) {
-            this.playerActions.actionSwingSword();
+            this.playerActions?.actionSwingSword();
             return;
         }
         if (engine.input.keyboard.wasPressed(ACTION_2_KEY)) {
-            this.playerActions.actionShootArrow();
+            this.playerActions?.actionShootArrow();
             return;
         }
         if (engine.input.keyboard.wasPressed(ex.Keys.Q)) {
-            //take dmg
-            // this.takeDamage();
-            this.displayStuff(this);
+            //Use this key to debug whatever you feel like
         }
         [
             { key: ex.Keys.Digit1, skinId: "RED" },

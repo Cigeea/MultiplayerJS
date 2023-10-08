@@ -15,7 +15,7 @@ const game = new ex.Engine({
     height: VIEWPORT_HEIGHT * SCALE,
     fixedUpdateFps: 60,
     antialiasing: false,
-    displayMode: DisplayMode.FillScreen
+    // displayMode: DisplayMode.FillScreen
 });
 
 const map = new Map_Indoor();
@@ -27,7 +27,8 @@ game.add(player);
 game.on("initialize", () => {
     //Add custom Camera behaviour, following player and being limited to the map bounds
     const cameraStrategy = new Player_CameraStrategy(player, map);
-    game.currentScene.camera.addStrategy(cameraStrategy);
+    // game.currentScene.camera.addStrategy(cameraStrategy);
+    game.currentScene.camera.strategy.lockToActor(player)
 
     // Set up ability to query for certain actors on the fly
     game.currentScene.world.queryManager.createQuery([TAG_ANY_PLAYER]);

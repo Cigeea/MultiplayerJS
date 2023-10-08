@@ -128,6 +128,7 @@ export class Sword extends ex.Actor {
             this.pos.x += 8 * SCALE;
             this.pos.y += 1 * SCALE;
         }
+
     }
 
     onDamagedSomething() {
@@ -136,5 +137,9 @@ export class Sword extends ex.Actor {
 
     useFrame(key: SWORD_SWING_TYPE, direction: DIRECTION) {
         this.graphics.use(this.frames![direction]![key]);
+    }
+
+    onInitialize(_engine: ex.Engine): void {
+        // new DrawShapeHelper(this);
     }
 }
