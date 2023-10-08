@@ -11,8 +11,8 @@ export class PlayerActions {
 
     constructor(actor: Player | NetworkPlayer) {
         this.actor = actor;
-        // this.engine = actor.scene.engine;
-        this.engine = actor.engine;
+        this.engine = actor.scene.engine;
+        // this.engine = actor.engine;
     }
 
     actionSwingSword() {

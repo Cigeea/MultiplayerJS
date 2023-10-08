@@ -25,7 +25,7 @@ export class Player extends ex.Actor {
     facing: DIRECTION;
     skinAnims: Record<DIRECTION, Record<POSE, ex.Animation>>;
     playerAnimations: PlayerAnimations;
-    playerActions: PlayerActions;
+    playerActions: PlayerActions | null;
     actionAnimation: SpriteSequence | null;
     walkingMsLeft: number = 0;
     skinId: "RED" | "GRAY" | "BLUE" | "YELLOW";
@@ -41,6 +41,7 @@ export class Player extends ex.Actor {
             height: 32,
             scale: SCALE_2x,
             collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 6)),
+            // collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 0)),
             collisionType: ex.CollisionType.Active,
             color: ex.Color.Blue
         });
@@ -51,7 +52,8 @@ export class Player extends ex.Actor {
         this.skinAnims = generateCharacterAnimations(skinId);
         this.graphics.use(this.skinAnims[DOWN][WALK]);
         this.playerAnimations = new PlayerAnimations(this);
-        this.playerActions = new PlayerActions(this);
+        // this.playerActions = new PlayerActions(this);
+        console.log('constructor');
         this.actionAnimation = null;
         this.isPainFlashing = false;
         this.painState = null;
@@ -59,6 +61,63 @@ export class Player extends ex.Actor {
         this.addTag(TAG_ANY_PLAYER);
         this.on("collisionstart", (evt) => this.onCollisionStart(evt));
     }
+
+    onInitialize(_engine: ex.Engine): void {
+        console.log('onInitialize');
+        new DrawShapeHelper(this);
+        this.playerActions = new PlayerActions(this);
+    }
+
+    displayStuff(player: Player): void {
+        window.player = player;
+        console.log('\n\n');
+        console.log('                                           Player data:   -> player');
+        console.log('center', player.center);
+        console.log('body.pos', player.body.pos);
+        console.log('pos', player.pos);
+        console.log('getGlobalPos()', player.getGlobalPos());
+
+        const componentCollider = player.collider;
+        window.componentCollider = componentCollider;
+        console.log('\n\n');
+        console.log('                                           Component Collider data:   -> componentCollider');
+        console.log('bounds', componentCollider.bounds);
+        console.log('localBounds', componentCollider.localBounds);
+
+        const collider = componentCollider.get();
+        window.collider = collider;
+        console.log('\n\n');
+        console.log('                                           Collider data:   -> collider');
+        console.log('worldPos', collider.worldPos);
+        console.log('center', collider.center);
+        console.log('bounds', collider.bounds);
+        console.log('localBounds', collider.localBounds);
+        this.displayColliderInWorldUnits(player, componentCollider)
+    }
+
+    displayColliderInWorldUnits(player: Player, collider: ex.ColliderComponent) {
+        const bounds = collider.bounds;
+        const { x: left, y: top } =
+            player.scene.engine.screenToWorldCoordinates(
+                ex.vec(bounds.left, bounds.top)
+            );
+        const { x: right, y: bottom } =
+            player.scene.engine.screenToWorldCoordinates(
+                ex.vec(bounds.right, bounds.bottom)
+            );
+        const newBounds = new ex.BoundingBox({
+            left,
+            top,
+            right,
+            bottom
+        });
+        window.bbox = newBounds;
+        console.log('\n\n');
+        console.log('                                           BoundingBox data:   -> BoundingBox');
+        console.log('bbox', newBounds);
+
+    }
+
     onCollisionStart(evt: ex.CollisionStartEvent<ex.Actor>): void {
         // Take damage from other Player's weapons
         if (evt.other.hasTag(TAG_PLAYER_WEAPON)) {
@@ -73,10 +132,6 @@ export class Player extends ex.Actor {
         if (evt.other.hasTag(TAG_DAMAGES_PLAYER)) {
             this.takeDamage();
         }
-    }
-
-    onInitialize(_engine: ex.Engine): void {
-        // new DrawShapeHelper(this);
     }
 
     createNetworkUpdateString() {
@@ -126,16 +181,16 @@ export class Player extends ex.Actor {
 
         this.vel.x = 0;
         this.vel.y = 0;
-        if (keyboard.isHeld(ex.Keys.Left)) {
+        if (keyboard.isHeld(ex.Keys.A)) {
             this.vel.x = -1;
         }
-        if (keyboard.isHeld(ex.Keys.Right)) {
+        if (keyboard.isHeld(ex.Keys.D)) {
             this.vel.x = 1;
         }
-        if (keyboard.isHeld(ex.Keys.Up)) {
+        if (keyboard.isHeld(ex.Keys.W)) {
             this.vel.y = -1;
         }
-        if (keyboard.isHeld(ex.Keys.Down)) {
+        if (keyboard.isHeld(ex.Keys.S)) {
             this.vel.y = 1;
         }
 
@@ -159,9 +214,10 @@ export class Player extends ex.Actor {
             this.playerActions.actionShootArrow();
             return;
         }
-        if (engine.input.keyboard.wasPressed(ex.Keys.W)) {
+        if (engine.input.keyboard.wasPressed(ex.Keys.Q)) {
             //take dmg
-            this.takeDamage();
+            // this.takeDamage();
+            this.displayStuff(this);
         }
         [
             { key: ex.Keys.Digit1, skinId: "RED" },
