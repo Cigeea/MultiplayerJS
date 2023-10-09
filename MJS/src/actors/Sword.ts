@@ -23,7 +23,6 @@ export class Sword extends ex.Actor {
     direction: DIRECTION;
     isUsed: boolean;
     owner: unknown;
-    // frames: { [x: string]: { SWORD_SWING_1: ex.Animation; SWORD_SWING_2: ex.Animation; SWORD_SWING_3: ex.Animation; }; };
     frames: Partial<Record<DIRECTION, Record<SWORD_SWING_TYPE, ex.Animation>>> = {};
     constructor(x: number, y: number, direction: DIRECTION) {
         super({
@@ -32,6 +31,7 @@ export class Sword extends ex.Actor {
             height: 32,
             scale: SCALE_2x,
             collider: ex.Shape.Box(16, 16, ex.Vector.Zero, new ex.Vector(-8, -8)),
+            // collider: ex.Shape.Box(16, 16, ex.Vector.Zero, new ex.Vector(0, 0)),
             collisionType: ex.CollisionType.Passive,
         });
         this.direction = direction;
@@ -115,18 +115,22 @@ export class Sword extends ex.Actor {
         if (direction === DOWN) {
             this.pos.x -= 5 * SCALE;
             this.pos.y += 15 * SCALE;
+            this.collider.set(ex.Shape.Box(24, 18, ex.Vector.Zero, new ex.Vector(-10, -2)));
         }
         if (direction === UP) {
             this.pos.x += 5 * SCALE;
             this.pos.y -= 6 * SCALE;
+            this.collider.set(ex.Shape.Box(24, 18, ex.Vector.Zero, new ex.Vector(-10, -16)));
         }
         if (direction === LEFT) {
             this.pos.x -= 8 * SCALE;
             this.pos.y += 1 * SCALE;
+            this.collider.set(ex.Shape.Box(18, 24, ex.Vector.Zero, new ex.Vector(-16, -10)));
         }
         if (direction === RIGHT) {
             this.pos.x += 8 * SCALE;
             this.pos.y += 1 * SCALE;
+            this.collider.set(ex.Shape.Box(18, 24, ex.Vector.Zero, new ex.Vector(-2, -10)));
         }
 
     }
@@ -140,6 +144,6 @@ export class Sword extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        new DrawShapeHelper(this);
+        new DrawShapeHelper(this, ex.Color.Red);
     }
 }

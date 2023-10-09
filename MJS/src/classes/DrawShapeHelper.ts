@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 
 export class DrawShapeHelper {
-    constructor(actor: ex.Actor) {
+    constructor(actor: ex.Actor, color?: ex.Color) {
         actor.scene?.on("postdraw", ({ ctx }) => {
             const bounds = actor.collider.bounds;
             if (!actor.scene) {             //Si l'acteur n'a pas de scene (dans le cas de Sword par exemple) on fail fast
@@ -21,7 +21,7 @@ export class DrawShapeHelper {
                 right,
                 bottom,
             });
-            newBounds.draw(ctx, ex.Color.Yellow);
+            newBounds.draw(ctx, color ?? ex.Color.Black);
         });
     }
 }
