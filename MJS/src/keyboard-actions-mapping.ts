@@ -1,3 +1,4 @@
+import { PlayerActions } from './actors/Players/PlayerActions';
 import * as ex from 'excalibur';
 
 //Directions de déplacement possibles 
@@ -14,7 +15,7 @@ export type DIRECTION = typeof directions[number];
 export type POSE = typeof poses[number];
 export type SKIN = typeof skins[number];
 
-export function getAssociatedKey(command: DIRECTION | SKIN): ex.Keys {
+export function getAssociatedKey(command: DIRECTION | SKIN | ACTION): ex.Keys {
     switch (command) {
         case 'UP': return ex.Keys.W;
         case 'DOWN': return ex.Keys.S;
@@ -24,9 +25,10 @@ export function getAssociatedKey(command: DIRECTION | SKIN): ex.Keys {
         case 'GRAY': return ex.Keys.Digit2;
         case 'BLUE': return ex.Keys.Digit3;
         case 'YELLOW': return ex.Keys.Digit4;
+        case 'SWORDACTION': return ex.Keys.Space;
+        case 'ARROWACTION': return ex.Keys.E;
     }
 }
-
 
 export function getAssociatedUnitaryVector(dir: DIRECTION): ex.Vector {
     switch (dir) {
@@ -34,6 +36,15 @@ export function getAssociatedUnitaryVector(dir: DIRECTION): ex.Vector {
         case 'DOWN': return new ex.Vector(0, 1);;
         case 'LEFT': return new ex.Vector(-1, 0);;
         case 'RIGHT': return new ex.Vector(1, 0);;
+    }
+}
+
+export function executeAssociatedAction(act: ACTION, pa: PlayerActions): void {
+    switch (act) {
+        case 'SWORDACTION': pa.actionSwingSword();
+            break;
+        case 'ARROWACTION': pa.actionShootArrow();
+            break;
     }
 }
 

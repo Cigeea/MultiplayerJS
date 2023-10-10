@@ -19,6 +19,8 @@ export class PlayerActions {
         const SWORD_SWING_SPEED = 50;
         const { actor, engine } = this;
 
+        console.log('Inside actionSwingSword ')
+        console.log(this);
         //Create a new Sequence with dedicated callback per frame
         actor.actionAnimation = new SpriteSequence(
             SWORDACTION,

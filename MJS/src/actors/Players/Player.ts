@@ -9,7 +9,8 @@ import { PlayerAnimations } from './PlayerAnimation.js';
 import { PlayerActions } from './PlayerActions.js';
 import { SpriteSequence } from '../../classes/SpriteSequence.js';
 import { Sword } from '../Sword.js';
-import { directions, getAssociatedKey, getAssociatedUnitaryVector, skins } from '../../keyboard-actions-mapping.js';
+import { actions, directions, executeAssociatedAction, getAssociatedKey, getAssociatedUnitaryVector, skins } from '../../keyboard-actions-mapping.js';
+
 
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
@@ -42,7 +43,6 @@ export class Player extends ex.Actor {
             height: 32,
             scale: SCALE_2x,
             collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 6)),
-            // collider: ex.Shape.Box(15, 15, ANCHOR_CENTER, new ex.Vector(0, 0)),
             collisionType: ex.CollisionType.Active,
             color: ex.Color.Blue
         });
@@ -62,7 +62,7 @@ export class Player extends ex.Actor {
     }
 
     onInitialize(_engine: ex.Engine): void {
-        // new DrawShapeHelper(this);
+        new DrawShapeHelper(this);
         this.playerActions = new PlayerActions(this);
         this.playerAnimations = new PlayerAnimations(this);
     }
@@ -81,14 +81,6 @@ export class Player extends ex.Actor {
         if (evt.other.hasTag(TAG_DAMAGES_PLAYER)) {
             this.takeDamage();
         }
-    }
-
-    createNetworkUpdateString() {
-        const actionType = this.actionAnimation?.type ?? "NULL";
-        const isInPain = Boolean(this.painState);
-        const x = Math.round(this.pos.x);
-        const y = Math.round(this.pos.y);
-        return `${actionType}|${x}|${y}|${this.vel.x}|${this.vel.y}|${this.skinId}|${this.facing}|${isInPain}|${this.isPainFlashing}`;
     }
 
     onPreUpdate(engine: ex.Engine, delta: number) {
@@ -145,20 +137,16 @@ export class Player extends ex.Actor {
 
     onPreUpdateActionKeys(engine: ex.Engine) {
         const keyboard = engine.input.keyboard;
-        //Register action keys
-        if (keyboard.wasPressed(ACTION_1_KEY)) {
-            this.playerActions?.actionSwingSword();
-            return;
-        }
-        if (keyboard.wasPressed(ACTION_2_KEY)) {
-            this.playerActions?.actionShootArrow();
-            return;
-        }
-        if (keyboard.wasPressed(ex.Keys.Q)) {
-            //Use this key to debug whatever you feel like
-        }
 
+        //Performing an action (sword, arrow)
+        actions.forEach(action => {
+            if (keyboard.wasPressed(getAssociatedKey(action))) {
+                executeAssociatedAction(action, this.playerActions);
+                return;
+            }
+        });
 
+        //Changing skins
         skins.forEach(skin => {
             if (keyboard.wasPressed(getAssociatedKey(skin))) {
                 this.skinId = skin;
@@ -167,6 +155,7 @@ export class Player extends ex.Actor {
         });
         return;
     }
+
     takeDamage() {
         //No pain if already in pain
         if (this.isPainFlashing) {
@@ -183,6 +172,14 @@ export class Player extends ex.Actor {
 
         //Flash for a little bit
         this.playerActions?.flashSeries();
+    }
+
+    createNetworkUpdateString() {
+        const actionType = this.actionAnimation?.type ?? "NULL";
+        const isInPain = Boolean(this.painState);
+        const x = Math.round(this.pos.x);
+        const y = Math.round(this.pos.y);
+        return `${actionType}|${x}|${y}|${this.vel.x}|${this.vel.y}|${this.skinId}|${this.facing}|${isInPain}|${this.isPainFlashing}`;
     }
 
 }
