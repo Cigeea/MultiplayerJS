@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { DIRECTION, DOWN, UP, LEFT, RIGHT } from "../constants.ts";
+import { directions, getAssociatedKey } from "../keyboard-actions-mapping.ts";
 
 export class DirectionQueue {
     heldDirections: DIRECTION[];
@@ -24,18 +25,29 @@ export class DirectionQueue {
         this.heldDirections = this.heldDirections.filter((d) => d !== dir);
     }
 
+    // update(engine: ex.Engine) {
+    //     [
+    //         { key: ex.Keys.A, dir: LEFT },
+    //         { key: ex.Keys.D, dir: RIGHT },
+    //         { key: ex.Keys.W, dir: UP },
+    //         { key: ex.Keys.S, dir: DOWN },
+    //     ].forEach((group) => {
+    //         if (engine.input.keyboard.wasPressed(group.key)) {
+    //             this.add(group.dir);
+    //         }
+    //         if (engine.input.keyboard.wasReleased(group.key)) {
+    //             this.remove(group.dir);
+    //         }
+    //     });
+    // }
+
     update(engine: ex.Engine) {
-        [
-            { key: ex.Keys.A, dir: LEFT },
-            { key: ex.Keys.D, dir: RIGHT },
-            { key: ex.Keys.W, dir: UP },
-            { key: ex.Keys.S, dir: DOWN },
-        ].forEach((group) => {
-            if (engine.input.keyboard.wasPressed(group.key)) {
-                this.add(group.dir);
+        directions.forEach(dir => {
+            if (engine.input.keyboard.wasPressed(getAssociatedKey(dir))) {
+                this.add(dir);
             }
-            if (engine.input.keyboard.wasReleased(group.key)) {
-                this.remove(group.dir);
+            if (engine.input.keyboard.wasReleased(getAssociatedKey(dir))) {
+                this.remove(dir);
             }
         });
     }
