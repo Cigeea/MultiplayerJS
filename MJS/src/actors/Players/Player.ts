@@ -9,7 +9,7 @@ import { PlayerAnimations } from './PlayerAnimation.js';
 import { PlayerActions } from './PlayerActions.js';
 import { SpriteSequence } from '../../classes/SpriteSequence.js';
 import { Sword } from '../Sword.js';
-import { directions, getAssociatedKey, getAssociatedUnitaryVector } from '../../keyboard-actions-mapping.js';
+import { directions, getAssociatedKey, getAssociatedUnitaryVector, skins } from '../../keyboard-actions-mapping.js';
 
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
@@ -25,8 +25,8 @@ export class Player extends ex.Actor {
     directionQueue: DirectionQueue;
     facing: DIRECTION;
     skinAnims: Record<DIRECTION, Record<POSE, ex.Animation>>;
-    playerAnimations: PlayerAnimations;
-    playerActions: PlayerActions | null;
+    playerAnimations!: PlayerAnimations;
+    playerActions!: PlayerActions;
     actionAnimation: SpriteSequence | null;
     walkingMsLeft: number = 0;
     skinId: "RED" | "GRAY" | "BLUE" | "YELLOW";
@@ -52,7 +52,7 @@ export class Player extends ex.Actor {
         this.skinId = skinId;
         this.skinAnims = generateCharacterAnimations(skinId);
         this.graphics.use(this.skinAnims[DOWN][WALK]);
-        this.playerAnimations = new PlayerAnimations(this);
+
         this.actionAnimation = null;
         this.isPainFlashing = false;
         this.painState = null;
@@ -64,6 +64,7 @@ export class Player extends ex.Actor {
     onInitialize(_engine: ex.Engine): void {
         // new DrawShapeHelper(this);
         this.playerActions = new PlayerActions(this);
+        this.playerAnimations = new PlayerAnimations(this);
     }
 
     onCollisionStart(evt: ex.CollisionStartEvent<ex.Actor>): void {
@@ -143,29 +144,27 @@ export class Player extends ex.Actor {
     }
 
     onPreUpdateActionKeys(engine: ex.Engine) {
+        const keyboard = engine.input.keyboard;
         //Register action keys
-        if (engine.input.keyboard.wasPressed(ACTION_1_KEY)) {
+        if (keyboard.wasPressed(ACTION_1_KEY)) {
             this.playerActions?.actionSwingSword();
             return;
         }
-        if (engine.input.keyboard.wasPressed(ACTION_2_KEY)) {
+        if (keyboard.wasPressed(ACTION_2_KEY)) {
             this.playerActions?.actionShootArrow();
             return;
         }
-        if (engine.input.keyboard.wasPressed(ex.Keys.Q)) {
+        if (keyboard.wasPressed(ex.Keys.Q)) {
             //Use this key to debug whatever you feel like
         }
-        [
-            { key: ex.Keys.Digit1, skinId: "RED" },
-            { key: ex.Keys.Digit2, skinId: "GRAY" },
-            { key: ex.Keys.Digit3, skinId: "BLUE" },
-            { key: ex.Keys.Digit4, skinId: "YELLOW" }
-        ].forEach(({ key, skinId }) => {
-            if (engine.input.keyboard.wasPressed(key)) {
-                this.skinId = skinId as "RED" | "GRAY" | "BLUE" | "YELLOW";
-                this.skinAnims = generateCharacterAnimations(skinId);
+
+
+        skins.forEach(skin => {
+            if (keyboard.wasPressed(getAssociatedKey(skin))) {
+                this.skinId = skin;
+                this.skinAnims = generateCharacterAnimations(skin);
             }
-        })
+        });
         return;
     }
     takeDamage() {
