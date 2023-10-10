@@ -6,6 +6,8 @@ export const VIEWPORT_HEIGHT = 144 + 48;
 // export const VIEWPORT_WIDTH = 400;
 // export const VIEWPORT_HEIGHT = 300;
 
+export const WALKING_SPEED = 160;
+
 export const SCALE = 2;
 export const SCALE_2x = new ex.Vector(2, 2);
 

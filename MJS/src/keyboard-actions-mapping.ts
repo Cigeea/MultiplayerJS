@@ -19,3 +19,12 @@ export function getAssociatedKey(dir: DIRECTION): ex.Keys {
         case "RIGHT": return ex.Keys.D;
     }
 }
+
+export function getAssociatedUnitaryVector(dir: DIRECTION): ex.Vector {
+    switch (dir) {
+        case "UP": return new ex.Vector(0, -1);
+        case "DOWN": return new ex.Vector(0, 1);;
+        case "LEFT": return new ex.Vector(-1, 0);;
+        case "RIGHT": return new ex.Vector(1, 0);;
+    }
+}

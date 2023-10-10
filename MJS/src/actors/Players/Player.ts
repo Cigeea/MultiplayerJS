@@ -1,4 +1,4 @@
-import { EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON } from './../../constants';
+import { EVENT_SEND_PLAYER_UPDATE, TAG_ANY_PLAYER, TAG_DAMAGES_PLAYER, TAG_PLAYER_WEAPON, WALKING_SPEED } from './../../constants';
 import { NetworkUpdater } from './../../classes/NetworkUpdater';
 import * as ex from 'excalibur';
 import { SCALE_2x, DIRECTION, ANCHOR_CENTER, DOWN, WALK, POSE, LEFT, UP } from '../../constants';
@@ -9,6 +9,7 @@ import { PlayerAnimations } from './PlayerAnimation.js';
 import { PlayerActions } from './PlayerActions.js';
 import { SpriteSequence } from '../../classes/SpriteSequence.js';
 import { Sword } from '../Sword.js';
+import { directions, getAssociatedKey, getAssociatedUnitaryVector } from '../../keyboard-actions-mapping.js';
 
 const ACTION_1_KEY = ex.Keys.Space;
 const ACTION_2_KEY = ex.Keys.X;
@@ -109,8 +110,9 @@ export class Player extends ex.Actor {
     }
 
     onPreUpdateMovement(engine: ex.Engine, delta: number) {
+        const keyboard = engine.input.keyboard;
 
-        //work down pain state
+        //Handle Pain State
         if (this.painState) {
             this.vel.x = this.painState.painVelX;
             this.vel.y = this.painState.painVelY;
@@ -123,29 +125,18 @@ export class Player extends ex.Actor {
             return;
         }
 
-        const keyboard = engine.input.keyboard;
-        const WALKING_SPEED = 160;
-
-        this.vel.x = 0;
-        this.vel.y = 0;
-        if (keyboard.isHeld(ex.Keys.A)) {
-            this.vel.x = -1;
-        }
-        if (keyboard.isHeld(ex.Keys.D)) {
-            this.vel.x = 1;
-        }
-        if (keyboard.isHeld(ex.Keys.W)) {
-            this.vel.y = -1;
-        }
-        if (keyboard.isHeld(ex.Keys.S)) {
-            this.vel.y = 1;
-        }
+        //Handle walking speed
+        this.vel.setTo(0, 0);
+        directions.forEach(dir => {
+            if (keyboard.isHeld(getAssociatedKey(dir))) {
+                this.vel = this.vel.add(getAssociatedUnitaryVector(dir))
+            }
+        })
 
         // Normalize walking speed
         if (this.vel.x !== 0 || this.vel.y !== 0) {
             this.vel = this.vel.normalize();
-            this.vel.x = this.vel.x * WALKING_SPEED;
-            this.vel.y = this.vel.y * WALKING_SPEED;
+            this.vel.scale(WALKING_SPEED, this.vel)
         }
 
         this.facing = this.directionQueue.direction ?? this.facing;
